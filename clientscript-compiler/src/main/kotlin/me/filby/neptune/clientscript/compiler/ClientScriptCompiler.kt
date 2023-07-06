@@ -45,8 +45,10 @@ class ClientScriptCompiler(
         types.register("invhook", MetaType.Hook(ScriptVarType.INV))
         types.register("varphook", MetaType.Hook(VarPlayerType(MetaType.Any)))
         types.register("dbcolumn", DbColumnType(MetaType.Any))
-        types.register("label", MetaType.Script(ClientTriggerType.LABEL, MetaType.Unit, MetaType.Nothing))
 
+        types.register("varp", VarPlayerType(MetaType.Any))
+
+        types.register("label", MetaType.Script(ClientTriggerType.LABEL, MetaType.Unit, MetaType.Nothing))
         types.register("weakqueue", MetaType.Script(ClientTriggerType.WEAKQUEUE, MetaType.Any, MetaType.Nothing))
         types.register("queue", MetaType.Script(ClientTriggerType.QUEUE, MetaType.Any, MetaType.Nothing))
         addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
