@@ -5,6 +5,7 @@ import me.filby.neptune.clientscript.compiler.command.DbGetFieldCommandHandler
 import me.filby.neptune.clientscript.compiler.command.EnumCommandHandler
 import me.filby.neptune.clientscript.compiler.command.ParamCommandHandler
 import me.filby.neptune.clientscript.compiler.command.PlaceholderCommand
+import me.filby.neptune.clientscript.compiler.command.QueueCommandHandler
 import me.filby.neptune.clientscript.compiler.trigger.ClientTriggerType
 import me.filby.neptune.clientscript.compiler.type.DbColumnType
 import me.filby.neptune.clientscript.compiler.type.ParamType
@@ -44,6 +45,11 @@ class ClientScriptCompiler(
         types.register("invhook", MetaType.Hook(ScriptVarType.INV))
         types.register("varphook", MetaType.Hook(VarPlayerType(MetaType.Any)))
         types.register("dbcolumn", DbColumnType(MetaType.Any))
+        types.register("label", MetaType.Script(ClientTriggerType.LABEL, MetaType.Unit, MetaType.Nothing))
+
+        types.register("weakqueue", MetaType.Script(ClientTriggerType.WEAKQUEUE, MetaType.Any, MetaType.Nothing))
+        types.register("queue", MetaType.Script(ClientTriggerType.QUEUE, MetaType.Any, MetaType.Nothing))
+        addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
 
         // allow assignment of namedobj to obj
         types.addTypeChecker { left, right -> left == ScriptVarType.OBJ && right == ScriptVarType.NAMEDOBJ }

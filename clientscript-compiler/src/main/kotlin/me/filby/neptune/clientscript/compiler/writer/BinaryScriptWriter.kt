@@ -193,7 +193,8 @@ abstract class BinaryScriptWriter(
     }
 
     override fun BinaryScriptWriterContext.writeJump(symbol: ScriptSymbol) {
-        error("Not supported.")
+        val id = idProvider.get(symbol)
+        instruction(ClientScriptOpcode.JUMP_WITH_PARAMS, id)
     }
 
     override fun BinaryScriptWriterContext.writeCommand(symbol: ScriptSymbol) {

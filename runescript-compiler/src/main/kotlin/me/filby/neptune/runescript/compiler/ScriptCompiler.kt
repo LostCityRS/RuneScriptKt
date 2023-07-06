@@ -197,7 +197,7 @@ public open class ScriptCompiler(
         for (file in sourcePath.toFile().walkTopDown()) {
             // TODO ability to configure file extension
             // skip directories and non .cs2 files
-            if (file.isDirectory || file.extension != "cs2") {
+            if (file.isDirectory || file.extension != "rs2") {
                 continue
             }
 

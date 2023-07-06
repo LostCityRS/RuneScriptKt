@@ -15,3 +15,18 @@ application {
     applicationName = "cs2"
     mainClass.set("me.filby.neptune.clientscript.compiler.ClientScriptCompilerApplicationKt")
 }
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "me.filby.neptune.clientscript.compiler.ClientScriptCompilerApplicationKt"
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from(sourceSets.main.get().output)
+
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+}

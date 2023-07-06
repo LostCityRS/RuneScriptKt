@@ -64,6 +64,13 @@ class BinaryScriptWriterContext(
         val switchBufferSize = switchBuffer.writerIndex()
 
         buf.writeString(script.fullName)
+        buf.writeString(script.sourceName)
+        buf.writeShort(lineNumberTable.size)
+        for ((pc, line) in lineNumberTable) {
+            buf.writeInt(pc)
+            buf.writeInt(line)
+        }
+
         buf.writeBytes(instructionBuffer)
         buf.writeInt(instructionCount)
         buf.writeShort(locals.getLocalCount(BaseVarType.INTEGER))
@@ -79,6 +86,8 @@ class BinaryScriptWriterContext(
     private fun calculateBufferSize(): Int {
         var size = 0
         size += script.fullName.length + 1
+        size += script.sourceName.length + 1
+        size += lineNumberTable.size * 8 + 2
         size += instructionBuffer.readableBytes()
         size += 4 // instruction count
         size += 2 * 4 // local var counts
