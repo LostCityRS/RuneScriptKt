@@ -8,23 +8,24 @@ import me.filby.neptune.runescript.compiler.type.MetaType
 import me.filby.neptune.runescript.compiler.type.TupleType
 import me.filby.neptune.runescript.compiler.type.Type
 
-class ParamCommandHandler(private val type: Type) : DynamicCommandHandler {
+class ParamCommandHandler(private val type: Type?) : DynamicCommandHandler {
     override fun TypeCheckingContext.typeCheck() {
-        // check first argument is the defined type
-        checkArgument(0, type)
+        val expectedTypes = mutableListOf<Type>()
+
+        if (type != null) {
+            expectedTypes += type
+            checkArgument(0, type)
+        }
 
         // check the second argument is a param reference
-        val paramExpr = checkArgument(1, PARAM_ANY)
+        val paramExpr = checkArgument(if (type == null) 0 else 1, PARAM_ANY)
         val paramReturnType = (paramExpr?.type as? ParamType)?.inner
 
-        // define the expected types based on what is currently known
-        val expectedTypes = TupleType(
-            type,
-            ParamType(paramReturnType ?: MetaType.Any),
-        )
+        // add param type to the expected types list
+        expectedTypes += ParamType(paramReturnType ?: MetaType.Any)
 
         // compare the expected types with the actual types
-        if (!checkArgumentTypes(expectedTypes)) {
+        if (!checkArgumentTypes(TupleType.fromList(expectedTypes))) {
             expression.type = MetaType.Error
             return
         }
