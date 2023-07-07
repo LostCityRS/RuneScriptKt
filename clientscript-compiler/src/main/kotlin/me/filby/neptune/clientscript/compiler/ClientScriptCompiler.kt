@@ -62,8 +62,11 @@ class ClientScriptCompiler(
         // register the dynamic command handlers
         addDynamicCommandHandler("enum", EnumCommandHandler())
         addDynamicCommandHandler("oc_param", ParamCommandHandler(ScriptVarType.OBJ))
+        addDynamicCommandHandler("obj_param", ParamCommandHandler(null))
         addDynamicCommandHandler("nc_param", ParamCommandHandler(ScriptVarType.NPC))
+        addDynamicCommandHandler("npc_param", ParamCommandHandler(null))
         addDynamicCommandHandler("lc_param", ParamCommandHandler(ScriptVarType.LOC))
+        addDynamicCommandHandler("loc_param", ParamCommandHandler(null))
         addDynamicCommandHandler("struct_param", ParamCommandHandler(ScriptVarType.STRUCT))
         addDynamicCommandHandler("db_find", DbFindCommandHandler(false))
         addDynamicCommandHandler("db_find_with_count", DbFindCommandHandler(true))

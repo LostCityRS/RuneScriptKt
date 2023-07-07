@@ -159,6 +159,7 @@ enum class ClientScriptOpcode(val id: Int, val largeOperand: Boolean = false) {
     NC_PARAM(2107),
     ENUM(2108),
     P_LOGOUT(2109),
+    OBJ_PARAM(2110),
 
     IF_CHATSELECT(2500),
     CHATNPC(2501),
