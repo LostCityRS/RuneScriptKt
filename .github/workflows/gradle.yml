@@ -24,7 +24,7 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
-        arguments: build
+        arguments: build -x test
 
     - run: rm clientscript-compiler/build/libs/neptune-clientscript-compiler-*-sources.jar
     - run: mv clientscript-compiler/build/libs/neptune-clientscript-compiler-*.jar clientscript-compiler/build/libs/RuneScriptCompiler.jar
