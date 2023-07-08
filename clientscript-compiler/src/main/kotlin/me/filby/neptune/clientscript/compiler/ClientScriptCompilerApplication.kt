@@ -1,6 +1,6 @@
 package me.filby.neptune.clientscript.compiler
 
-import me.filby.neptune.clientscript.compiler.writer.BinaryFileScriptWriter
+import me.filby.neptune.clientscript.compiler.writer.JagFileScriptWriter
 import kotlin.io.path.Path
 import kotlin.io.path.exists
 import kotlin.io.path.readLines
@@ -30,7 +30,7 @@ fun main(args: Array<String>) {
         }
     }
 
-    val writer = BinaryFileScriptWriter(outputPath, mapper)
+    val writer = JagFileScriptWriter(outputPath, mapper)
     val compiler = ClientScriptCompiler(srcPath, writer, mapper)
     compiler.setup()
     compiler.run()
