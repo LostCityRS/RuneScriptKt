@@ -214,6 +214,12 @@ enum class ClientScriptOpcode(val id: Int, val largeOperand: Boolean = false) {
     STRING_INDEXOF_CHAR(4120),
     STRING_INDEXOF_STRING(4121),
     UPPERCASE(4122),
+
+    // Debug ops
+    ACTIVE_NPC(10000),
+    ACTIVE_PLAYER(10001),
+    ACTIVE_LOC(10002),
+    ACTIVE_OBJ(10003),
     ;
 
     companion object {
