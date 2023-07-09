@@ -182,6 +182,7 @@ enum class ClientScriptOpcode(val id: Int, val largeOperand: Boolean = false) {
     IF_MULTIZONE(2130),
     INV_TRANSMIT(2131),
     INV_STOPTRANSMIT(2132),
+    STRUCT_PARAM(2133),
 
     ERROR(2502),
     GIVEXP(2505),
