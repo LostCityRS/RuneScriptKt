@@ -82,9 +82,15 @@ enum class ClientTriggerType(
     WEAKQUEUE(53, allowParameters = true),
     QUEUE(54, allowParameters = true),
 
-    IF_BUTTON(55, subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT)),
+    DEBUGPROC(55),
 
-    DEBUGPROC(56),
+    IF_BUTTON(56, subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT)),
+    IF_CLOSE(57, subjectMode = SubjectMode.Type(ScriptVarType.INTERFACE)),
+    IF_BUTTON1(58, subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT)),
+    IF_BUTTON2(59, subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT)),
+    IF_BUTTON3(60, subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT)),
+    IF_BUTTON4(61, subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT)),
+    IF_BUTTON5(62, subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT)),
     ;
 
     override val identifier: String get() = name.lowercase()
