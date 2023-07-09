@@ -3,8 +3,6 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ "2004scape" ]
-  pull_request:
-    branches: [ "2004scape" ]
 
 permissions:
   contents: read
