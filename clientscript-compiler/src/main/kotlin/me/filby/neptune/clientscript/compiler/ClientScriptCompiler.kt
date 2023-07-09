@@ -45,13 +45,10 @@ class ClientScriptCompiler(
         types.register("invhook", MetaType.Hook(ScriptVarType.INV))
         types.register("varphook", MetaType.Hook(VarPlayerType(MetaType.Any)))
         types.register("dbcolumn", DbColumnType(MetaType.Any))
-
         types.register("varp", VarPlayerType(MetaType.Any))
-
         types.register("label", MetaType.Script(ClientTriggerType.LABEL, MetaType.Unit, MetaType.Nothing))
         types.register("weakqueue", MetaType.Script(ClientTriggerType.WEAKQUEUE, MetaType.Any, MetaType.Nothing))
         types.register("queue", MetaType.Script(ClientTriggerType.QUEUE, MetaType.Any, MetaType.Nothing))
-        addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
 
         // allow assignment of namedobj to obj
         types.addTypeChecker { left, right -> left == ScriptVarType.OBJ && right == ScriptVarType.NAMEDOBJ }
@@ -73,6 +70,10 @@ class ClientScriptCompiler(
         addDynamicCommandHandler("db_find_refine", DbFindCommandHandler(false))
         addDynamicCommandHandler("db_find_refine_with_count", DbFindCommandHandler(true))
         addDynamicCommandHandler("db_getfield", DbGetFieldCommandHandler())
+        addDynamicCommandHandler("weakqueue", QueueCommandHandler(types.find("weakqueue")))
+        addDynamicCommandHandler("queue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler("longqueue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
 
         addDynamicCommandHandler("event_opbase", PlaceholderCommand(PrimitiveType.STRING, "event_opbase"))
         addDynamicCommandHandler("event_mousex", PlaceholderCommand(PrimitiveType.INT, Int.MIN_VALUE + 1))
