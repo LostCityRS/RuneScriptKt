@@ -148,7 +148,7 @@ enum class ClientScriptOpcode(val id: Int, val largeOperand: Boolean = false) {
     SEQLENGTH(2097),
     SOUND_SYNTH(2098),
     SPLIT_INIT(2099),
-    SPLIT_PAGE(2100),
+    SPLIT_PAGECOUNT(2100),
     SPOTANIM_MAP(2101),
     STAFFMODLEVEL(2102),
     STAT(2103),
@@ -183,6 +183,8 @@ enum class ClientScriptOpcode(val id: Int, val largeOperand: Boolean = false) {
     INV_TRANSMIT(2131),
     INV_STOPTRANSMIT(2132),
     STRUCT_PARAM(2133),
+    SPLIT_GET(2134),
+    SPLIT_LINECOUNT(2135),
 
     ERROR(2502),
     GIVEXP(2505),
