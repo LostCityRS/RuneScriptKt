@@ -16,9 +16,6 @@ import me.filby.neptune.runescript.compiler.type.BaseVarType
 import me.filby.neptune.runescript.compiler.type.MetaType
 import me.filby.neptune.runescript.compiler.type.wrapped.ArrayType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarBitType
-import me.filby.neptune.runescript.compiler.type.wrapped.VarClanSettingsType
-import me.filby.neptune.runescript.compiler.type.wrapped.VarClanType
-import me.filby.neptune.runescript.compiler.type.wrapped.VarClientType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarPlayerType
 import me.filby.neptune.runescript.compiler.writer.BaseScriptWriter
 
@@ -102,16 +99,9 @@ abstract class BinaryScriptWriter(
 
     override fun BinaryScriptWriterContext.writePushVar(symbol: BasicSymbol) {
         val id = idProvider.get(symbol)
-        val opcode = when (val type = symbol.type) {
+        val opcode = when (symbol.type) {
             is VarPlayerType -> ClientScriptOpcode.PUSH_VARP
             is VarBitType -> ClientScriptOpcode.PUSH_VARBIT
-            is VarClientType -> when (type.inner.baseType) {
-                BaseVarType.INTEGER -> ClientScriptOpcode.PUSH_VARC_INT
-                BaseVarType.STRING -> ClientScriptOpcode.PUSH_VARC_STRING
-                else -> error(type.inner)
-            }
-            is VarClanType -> ClientScriptOpcode.PUSH_VARCLAN
-            is VarClanSettingsType -> ClientScriptOpcode.PUSH_VARCLANSETTING
             else -> error(symbol)
         }
         instruction(opcode, id)
@@ -119,14 +109,9 @@ abstract class BinaryScriptWriter(
 
     override fun BinaryScriptWriterContext.writePopVar(symbol: BasicSymbol) {
         val id = idProvider.get(symbol)
-        val opcode = when (val type = symbol.type) {
+        val opcode = when (symbol.type) {
             is VarPlayerType -> ClientScriptOpcode.POP_VARP
             is VarBitType -> ClientScriptOpcode.POP_VARBIT
-            is VarClientType -> when (type.inner.baseType) {
-                BaseVarType.INTEGER -> ClientScriptOpcode.POP_VARC_INT
-                BaseVarType.STRING -> ClientScriptOpcode.POP_VARC_STRING
-                else -> error(type.inner)
-            }
             else -> error(symbol)
         }
         instruction(opcode, id)
