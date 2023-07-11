@@ -47,6 +47,9 @@ class JagFileScriptWriter(
             dat.p2(lastId + 1)
             idx.p2(lastId + 1)
 
+            // write version to dat file
+            dat.p4(VERSION)
+
             for (i in 0..lastId) {
                 val buffer = buffers[i]
                 if (buffer == null) {
@@ -69,6 +72,17 @@ class JagFileScriptWriter(
 
     private fun OutputStream.p2(num: Int) {
         write(num shr 8)
-        write(num and 0xFF)
+        write(num)
+    }
+
+    private fun OutputStream.p4(num: Int) {
+        write(num shr 24)
+        write(num shr 16)
+        write(num shr 8)
+        write(num)
+    }
+
+    private companion object {
+        const val VERSION = 1
     }
 }
