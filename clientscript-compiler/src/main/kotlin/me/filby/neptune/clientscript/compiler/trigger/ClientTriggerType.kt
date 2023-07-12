@@ -91,6 +91,26 @@ enum class ClientTriggerType(
     IF_BUTTON3(60, subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT)),
     IF_BUTTON4(61, subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT)),
     IF_BUTTON5(62, subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT)),
+
+    OPHELDU(63, subjectMode = SubjectMode.Type(ScriptVarType.NAMEDOBJ, global = false)),
+    OPHELDT(64, subjectMode = SubjectMode.Type(ScriptVarType.NAMEDOBJ, global = false)),
+
+    OPNPCU(65, subjectMode = SubjectMode.Type(ScriptVarType.NPC, global = false)),
+    OPNPCT(66, subjectMode = SubjectMode.Type(ScriptVarType.NPC, global = false)),
+
+    OPLOCU(67, subjectMode = SubjectMode.Type(ScriptVarType.LOC, global = false)),
+    OPLOCT(68, subjectMode = SubjectMode.Type(ScriptVarType.LOC, global = false)),
+
+    OPOBJU(69, subjectMode = SubjectMode.Type(ScriptVarType.NAMEDOBJ, global = false)),
+    OPOBJT(70, subjectMode = SubjectMode.Type(ScriptVarType.NAMEDOBJ, global = false)),
+
+    OPPLAYER1(69, subjectMode = SubjectMode.None),
+    OPPLAYER2(70, subjectMode = SubjectMode.None),
+    OPPLAYER3(71, subjectMode = SubjectMode.None),
+    OPPLAYER4(72, subjectMode = SubjectMode.None),
+    OPPLAYER5(73, subjectMode = SubjectMode.None),
+    OPPLAYERU(74, subjectMode = SubjectMode.None),
+    OPPLAYERT(75, subjectMode = SubjectMode.None),
     ;
 
     override val identifier: String get() = name.lowercase()
