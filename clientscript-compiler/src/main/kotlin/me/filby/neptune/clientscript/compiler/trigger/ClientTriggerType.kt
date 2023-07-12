@@ -111,6 +111,9 @@ enum class ClientTriggerType(
     OPPLAYER5(73, subjectMode = SubjectMode.None),
     OPPLAYERU(74, subjectMode = SubjectMode.None),
     OPPLAYERT(75, subjectMode = SubjectMode.None),
+
+    LOGIN(76, subjectMode = SubjectMode.None),
+    LOGOUT(77, subjectMode = SubjectMode.None),
     ;
 
     override val identifier: String get() = name.lowercase()
