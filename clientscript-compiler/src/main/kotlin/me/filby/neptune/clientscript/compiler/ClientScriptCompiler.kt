@@ -121,6 +121,7 @@ class ClientScriptCompiler(
         addTsvLoader("varclan") { VarClanType(it) }
         addTsvLoader("varclansetting") { VarClanSettingsType(it) }
         addTsvLoader("stringvector", ScriptVarType.STRINGVECTOR)
+        addTsvLoader("mesanim", ScriptVarType.MESANIM)
     }
 
     /**
