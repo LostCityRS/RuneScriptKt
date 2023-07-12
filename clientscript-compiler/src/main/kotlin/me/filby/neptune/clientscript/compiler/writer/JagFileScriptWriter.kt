@@ -83,6 +83,6 @@ class JagFileScriptWriter(
     }
 
     private companion object {
-        const val VERSION = 2
+        const val VERSION = 3
     }
 }
