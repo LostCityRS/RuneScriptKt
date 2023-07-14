@@ -114,6 +114,7 @@ enum class ClientTriggerType(
 
     LOGIN(76, subjectMode = SubjectMode.None),
     LOGOUT(77, subjectMode = SubjectMode.None),
+    MAPAREA(78),
     ;
 
     override val identifier: String get() = name.lowercase()
