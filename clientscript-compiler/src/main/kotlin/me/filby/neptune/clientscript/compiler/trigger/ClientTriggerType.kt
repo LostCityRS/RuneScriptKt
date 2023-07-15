@@ -82,7 +82,7 @@ enum class ClientTriggerType(
     WEAKQUEUE(53, allowParameters = true),
     QUEUE(54, allowParameters = true),
 
-    DEBUGPROC(55),
+    DEBUGPROC(55, allowParameters = true),
 
     IF_BUTTON(56, subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT)),
     IF_CLOSE(57, subjectMode = SubjectMode.Type(ScriptVarType.INTERFACE)),

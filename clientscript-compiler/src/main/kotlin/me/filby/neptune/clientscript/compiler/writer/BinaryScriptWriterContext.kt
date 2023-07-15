@@ -3,14 +3,17 @@ package me.filby.neptune.clientscript.compiler.writer
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufAllocator
 import me.filby.neptune.clientscript.compiler.ClientScriptOpcode
+import me.filby.neptune.clientscript.compiler.trigger.ClientTriggerType
 import me.filby.neptune.runescript.compiler.codegen.script.RuneScript
 import me.filby.neptune.runescript.compiler.type.BaseVarType
+import me.filby.neptune.runescript.compiler.type.TupleType
 import me.filby.neptune.runescript.compiler.writer.BaseScriptWriter
 import me.filby.neptune.runescript.compiler.writer.BaseScriptWriter.Companion.getLocalCount
 import me.filby.neptune.runescript.compiler.writer.BaseScriptWriter.Companion.getParameterCount
 
 class BinaryScriptWriterContext(
     script: RuneScript,
+    private val lookupKey: Int,
     private val allocator: ByteBufAllocator,
 ) : BaseScriptWriter.BaseScriptWriterContext(script) {
     /**
@@ -71,6 +74,20 @@ class BinaryScriptWriterContext(
 
         buf.writeString(script.fullName)
         buf.writeString(script.sourceName)
+        buf.writeInt(lookupKey)
+
+        // only write parameter types for debugproc
+        if (script.trigger == ClientTriggerType.DEBUGPROC) {
+            val parameterTypes = TupleType.toList(script.symbol.parameters)
+            buf.writeByte(parameterTypes.size)
+            for (parameterType in parameterTypes) {
+                val code = parameterType.code?.code ?: -1
+                buf.writeByte(code)
+            }
+        } else {
+            buf.writeByte(0)
+        }
+
         buf.writeShort(lineNumberTable.size)
         for ((pc, line) in lineNumberTable) {
             buf.writeInt(pc)
@@ -93,6 +110,8 @@ class BinaryScriptWriterContext(
         var size = 0
         size += script.fullName.length + 1
         size += script.sourceName.length + 1
+        size += 4 // lookup key
+        size += 1 // parameter type count
         size += lineNumberTable.size * 8 + 2
         size += instructionBuffer.readableBytes()
         size += 4 // instruction count

@@ -3,6 +3,7 @@ package me.filby.neptune.clientscript.compiler.writer
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufAllocator
 import me.filby.neptune.clientscript.compiler.ClientScriptOpcode
+import me.filby.neptune.clientscript.compiler.type.ScriptVarType
 import me.filby.neptune.runescript.compiler.codegen.Opcode
 import me.filby.neptune.runescript.compiler.codegen.script.Block
 import me.filby.neptune.runescript.compiler.codegen.script.Label
@@ -12,6 +13,7 @@ import me.filby.neptune.runescript.compiler.symbol.BasicSymbol
 import me.filby.neptune.runescript.compiler.symbol.LocalVariableSymbol
 import me.filby.neptune.runescript.compiler.symbol.ScriptSymbol
 import me.filby.neptune.runescript.compiler.symbol.Symbol
+import me.filby.neptune.runescript.compiler.trigger.SubjectMode
 import me.filby.neptune.runescript.compiler.type.BaseVarType
 import me.filby.neptune.runescript.compiler.type.MetaType
 import me.filby.neptune.runescript.compiler.type.wrapped.ArrayType
@@ -44,7 +46,28 @@ abstract class BinaryScriptWriter(
     }
 
     override fun createContext(script: RuneScript): BinaryScriptWriterContext {
-        return BinaryScriptWriterContext(script, allocator)
+        val lookupKey = generateLookupKey(script)
+        return BinaryScriptWriterContext(script, lookupKey, allocator)
+    }
+
+    private fun generateLookupKey(script: RuneScript): Int {
+        val trigger = script.trigger
+        val subjectMode = script.trigger.subjectMode
+        val subject = script.subjectReference
+
+        // special case for no name
+        if (subjectMode == SubjectMode.Name) {
+            return -1
+        }
+
+        var lookupKey = trigger.id
+        if (subjectMode is SubjectMode.Type && subject != null) {
+            val subjectType = subject.type
+            val subjectId = idProvider.get(subject)
+            val type = if (subjectType == ScriptVarType.CATEGORY) 1 else 2
+            lookupKey += (type shl 8) or (subjectId shl 10)
+        }
+        return lookupKey
     }
 
     override fun BinaryScriptWriterContext.enterBlock(block: Block) {
