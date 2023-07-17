@@ -53,6 +53,7 @@ enum class ScriptVarType(
     DBTABLE(null),
     STRINGVECTOR('¸'),
     MESANIM('Á'),
+    VERIFY_OBJECT('®', representation = "verifyobj"),
     ;
 
     override val representation: String = representation ?: name.lowercase()

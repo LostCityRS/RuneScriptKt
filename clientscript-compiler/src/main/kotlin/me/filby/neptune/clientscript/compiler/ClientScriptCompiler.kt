@@ -6,6 +6,7 @@ import me.filby.neptune.clientscript.compiler.command.EnumCommandHandler
 import me.filby.neptune.clientscript.compiler.command.ParamCommandHandler
 import me.filby.neptune.clientscript.compiler.command.PlaceholderCommand
 import me.filby.neptune.clientscript.compiler.command.QueueCommandHandler
+import me.filby.neptune.clientscript.compiler.command.TimerCommandHandler
 import me.filby.neptune.clientscript.compiler.trigger.ClientTriggerType
 import me.filby.neptune.clientscript.compiler.type.DbColumnType
 import me.filby.neptune.clientscript.compiler.type.ParamType
@@ -50,6 +51,8 @@ class ClientScriptCompiler(
         types.register("label", MetaType.Script(ClientTriggerType.LABEL, MetaType.Unit, MetaType.Nothing))
         types.register("weakqueue", MetaType.Script(ClientTriggerType.WEAKQUEUE, MetaType.Any, MetaType.Nothing))
         types.register("queue", MetaType.Script(ClientTriggerType.QUEUE, MetaType.Any, MetaType.Nothing))
+        types.register("timer", MetaType.Script(ClientTriggerType.TIMER, MetaType.Any, MetaType.Nothing))
+        types.register("softtimer", MetaType.Script(ClientTriggerType.SOFTTIMER, MetaType.Any, MetaType.Nothing))
 
         // allow assignment of namedobj to obj
         types.addTypeChecker { left, right -> left == ScriptVarType.OBJ && right == ScriptVarType.NAMEDOBJ }
@@ -75,6 +78,8 @@ class ClientScriptCompiler(
         addDynamicCommandHandler("queue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler("longqueue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler("softtimer", TimerCommandHandler(types.find("softtimer")))
+        addDynamicCommandHandler("settimer", TimerCommandHandler(types.find("timer")))
 
         addDynamicCommandHandler("event_opbase", PlaceholderCommand(PrimitiveType.STRING, "event_opbase"))
         addDynamicCommandHandler("event_mousex", PlaceholderCommand(PrimitiveType.INT, Int.MIN_VALUE + 1))
