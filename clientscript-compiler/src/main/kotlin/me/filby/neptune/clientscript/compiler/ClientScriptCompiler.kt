@@ -115,6 +115,7 @@ class ClientScriptCompiler(
         addTsvLoader("enum", ScriptVarType.ENUM)
         addTsvLoader("struct", ScriptVarType.STRUCT)
         addTsvLoader("seq", ScriptVarType.SEQ)
+        addTsvLoader("spotanim", ScriptVarType.SPOTANIM)
         addTsvLoader("dbtable", ScriptVarType.DBTABLE)
         addTsvLoader("dbrow", ScriptVarType.DBROW)
         addTsvLoader("dbcolumn") { DbColumnType(it) }
