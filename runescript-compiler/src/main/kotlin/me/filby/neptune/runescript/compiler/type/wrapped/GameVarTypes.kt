@@ -21,6 +21,10 @@ public data class VarPlayerType(override val inner: Type) : GameVarType {
     override val representation: String = "varp<${inner.representation}>"
 }
 
+public data class VarNpcType(override val inner: Type) : GameVarType {
+    override val representation: String = "varn<${inner.representation}>"
+}
+
 public object VarBitType : GameVarType {
     override val inner: Type = PrimitiveType.INT
     override val representation: String = "varbit<${inner.representation}>"

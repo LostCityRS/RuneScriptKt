@@ -17,7 +17,7 @@ import me.filby.neptune.runescript.compiler.trigger.SubjectMode
 import me.filby.neptune.runescript.compiler.type.BaseVarType
 import me.filby.neptune.runescript.compiler.type.MetaType
 import me.filby.neptune.runescript.compiler.type.wrapped.ArrayType
-import me.filby.neptune.runescript.compiler.type.wrapped.VarBitType
+import me.filby.neptune.runescript.compiler.type.wrapped.VarNpcType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarPlayerType
 import me.filby.neptune.runescript.compiler.writer.BaseScriptWriter
 
@@ -124,7 +124,7 @@ abstract class BinaryScriptWriter(
         val id = idProvider.get(symbol)
         val opcode = when (symbol.type) {
             is VarPlayerType -> ClientScriptOpcode.PUSH_VARP
-            is VarBitType -> ClientScriptOpcode.PUSH_VARBIT
+            is VarNpcType -> ClientScriptOpcode.PUSH_VARN
             else -> error(symbol)
         }
         instruction(opcode, id)
@@ -134,7 +134,7 @@ abstract class BinaryScriptWriter(
         val id = idProvider.get(symbol)
         val opcode = when (symbol.type) {
             is VarPlayerType -> ClientScriptOpcode.POP_VARP
-            is VarBitType -> ClientScriptOpcode.POP_VARBIT
+            is VarNpcType -> ClientScriptOpcode.POP_VARN
             else -> error(symbol)
         }
         instruction(opcode, id)

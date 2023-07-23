@@ -4,7 +4,6 @@ import me.filby.neptune.clientscript.compiler.command.DbFindCommandHandler
 import me.filby.neptune.clientscript.compiler.command.DbGetFieldCommandHandler
 import me.filby.neptune.clientscript.compiler.command.EnumCommandHandler
 import me.filby.neptune.clientscript.compiler.command.ParamCommandHandler
-import me.filby.neptune.clientscript.compiler.command.PlaceholderCommand
 import me.filby.neptune.clientscript.compiler.command.QueueCommandHandler
 import me.filby.neptune.clientscript.compiler.command.TimerCommandHandler
 import me.filby.neptune.clientscript.compiler.trigger.ClientTriggerType
@@ -13,12 +12,8 @@ import me.filby.neptune.clientscript.compiler.type.ParamType
 import me.filby.neptune.clientscript.compiler.type.ScriptVarType
 import me.filby.neptune.runescript.compiler.ScriptCompiler
 import me.filby.neptune.runescript.compiler.type.MetaType
-import me.filby.neptune.runescript.compiler.type.PrimitiveType
 import me.filby.neptune.runescript.compiler.type.Type
-import me.filby.neptune.runescript.compiler.type.wrapped.VarBitType
-import me.filby.neptune.runescript.compiler.type.wrapped.VarClanSettingsType
-import me.filby.neptune.runescript.compiler.type.wrapped.VarClanType
-import me.filby.neptune.runescript.compiler.type.wrapped.VarClientType
+import me.filby.neptune.runescript.compiler.type.wrapped.VarNpcType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarPlayerType
 import me.filby.neptune.runescript.compiler.writer.ScriptWriter
 import java.nio.file.Path
@@ -41,10 +36,6 @@ class ClientScriptCompiler(
         }
 
         // special types for commands
-        types.register("hook", MetaType.Hook(MetaType.Unit))
-        types.register("stathook", MetaType.Hook(ScriptVarType.STAT))
-        types.register("invhook", MetaType.Hook(ScriptVarType.INV))
-        types.register("varphook", MetaType.Hook(VarPlayerType(MetaType.Any)))
         types.register("dbcolumn", DbColumnType(MetaType.Any))
         types.register("varp", VarPlayerType(MetaType.Any))
         types.register("proc", MetaType.Script(ClientTriggerType.PROC, MetaType.Unit, MetaType.Unit))
@@ -57,9 +48,6 @@ class ClientScriptCompiler(
         // allow assignment of namedobj to obj
         types.addTypeChecker { left, right -> left == ScriptVarType.OBJ && right == ScriptVarType.NAMEDOBJ }
 
-        // allow assignment of graphic to fontmetrics
-        types.addTypeChecker { left, right -> left == ScriptVarType.FONTMETRICS && right == ScriptVarType.GRAPHIC }
-
         // register the dynamic command handlers
         addDynamicCommandHandler("enum", EnumCommandHandler())
         addDynamicCommandHandler("oc_param", ParamCommandHandler(ScriptVarType.OBJ))
@@ -70,9 +58,7 @@ class ClientScriptCompiler(
         addDynamicCommandHandler("loc_param", ParamCommandHandler(null))
         addDynamicCommandHandler("struct_param", ParamCommandHandler(ScriptVarType.STRUCT))
         addDynamicCommandHandler("db_find", DbFindCommandHandler(true))
-        addDynamicCommandHandler("db_find_with_count", DbFindCommandHandler(true))
         addDynamicCommandHandler("db_find_refine", DbFindCommandHandler(true))
-        addDynamicCommandHandler("db_find_refine_with_count", DbFindCommandHandler(true))
         addDynamicCommandHandler("db_getfield", DbGetFieldCommandHandler())
         addDynamicCommandHandler("weakqueue", QueueCommandHandler(types.find("weakqueue")))
         addDynamicCommandHandler("queue", QueueCommandHandler(types.find("queue")))
@@ -81,33 +67,16 @@ class ClientScriptCompiler(
         addDynamicCommandHandler("softtimer", TimerCommandHandler(types.find("softtimer")))
         addDynamicCommandHandler("settimer", TimerCommandHandler(types.find("timer")))
 
-        addDynamicCommandHandler("event_opbase", PlaceholderCommand(PrimitiveType.STRING, "event_opbase"))
-        addDynamicCommandHandler("event_mousex", PlaceholderCommand(PrimitiveType.INT, Int.MIN_VALUE + 1))
-        addDynamicCommandHandler("event_mousey", PlaceholderCommand(PrimitiveType.INT, Int.MIN_VALUE + 2))
-        addDynamicCommandHandler("event_com", PlaceholderCommand(ScriptVarType.COMPONENT, Int.MIN_VALUE + 3))
-        addDynamicCommandHandler("event_op", PlaceholderCommand(PrimitiveType.INT, Int.MIN_VALUE + 4))
-        addDynamicCommandHandler("event_comsubid", PlaceholderCommand(PrimitiveType.INT, Int.MIN_VALUE + 5))
-        addDynamicCommandHandler("event_com2", PlaceholderCommand(ScriptVarType.COMPONENT, Int.MIN_VALUE + 6))
-        addDynamicCommandHandler("event_comsubid2", PlaceholderCommand(PrimitiveType.INT, Int.MIN_VALUE + 7))
-        addDynamicCommandHandler("event_keycode", PlaceholderCommand(PrimitiveType.INT, Int.MIN_VALUE + 8))
-        addDynamicCommandHandler("event_keychar", PlaceholderCommand(PrimitiveType.CHAR, Int.MIN_VALUE + 9))
-
         // symbol loaders
         addTsvConstantLoaders()
 
-        addTsvLoader("graphic", ScriptVarType.GRAPHIC)
-        addTsvLoader("fontmetrics", ScriptVarType.FONTMETRICS)
         addTsvLoader("stat", ScriptVarType.STAT)
         addTsvLoader("synth", ScriptVarType.SYNTH)
         addTsvLoader("locshape", ScriptVarType.LOC_SHAPE)
         addTsvLoader("model", ScriptVarType.MODEL)
         addTsvLoader("interface", ScriptVarType.INTERFACE)
-        addTsvLoader("toplevelinterface", ScriptVarType.TOPLEVELINTERFACE)
-        addTsvLoader("overlayinterface", ScriptVarType.OVERLAYINTERFACE)
         addTsvLoader("component", ScriptVarType.COMPONENT)
         addTsvLoader("category", ScriptVarType.CATEGORY)
-        addTsvLoader("wma", ScriptVarType.MAPAREA)
-        addTsvLoader("mapelement", ScriptVarType.MAPELEMENT)
         addTsvLoader("loc", ScriptVarType.LOC)
         addTsvLoader("npc", ScriptVarType.NPC)
         addTsvLoader("obj", ScriptVarType.NAMEDOBJ)
@@ -121,12 +90,7 @@ class ClientScriptCompiler(
         addTsvLoader("dbcolumn") { DbColumnType(it) }
         addTsvLoader("param") { ParamType(it) }
         addTsvLoader("varp") { VarPlayerType(it) }
-        addTsvLoader("varcint") { VarClientType(it) }
-        addTsvLoader("varcstring") { VarClientType(it) }
-        addTsvLoader("varbit", VarBitType)
-        addTsvLoader("varclan") { VarClanType(it) }
-        addTsvLoader("varclansetting") { VarClanSettingsType(it) }
-        addTsvLoader("stringvector", ScriptVarType.STRINGVECTOR)
+        addTsvLoader("varn") { VarNpcType(it) }
         addTsvLoader("mesanim", ScriptVarType.MESANIM)
         addTsvLoader("hunt", ScriptVarType.HUNT)
         addTsvLoader("npc_mode", ScriptVarType.NPC_MODE)
