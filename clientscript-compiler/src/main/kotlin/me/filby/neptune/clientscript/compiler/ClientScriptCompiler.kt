@@ -128,6 +128,10 @@ class ClientScriptCompiler(
         addTsvLoader("varclansetting") { VarClanSettingsType(it) }
         addTsvLoader("stringvector", ScriptVarType.STRINGVECTOR)
         addTsvLoader("mesanim", ScriptVarType.MESANIM)
+        addTsvLoader("hunt", ScriptVarType.HUNT)
+        addTsvLoader("npc_mode", ScriptVarType.NPC_MODE)
+        addTsvLoader("npc_stat", ScriptVarType.NPC_STAT)
+        addTsvLoader("movespeed", ScriptVarType.MOVESPEED)
     }
 
     /**
