@@ -3,6 +3,7 @@ package me.filby.neptune.clientscript.compiler.trigger
 import me.filby.neptune.clientscript.compiler.type.ScriptVarType
 import me.filby.neptune.runescript.compiler.trigger.SubjectMode
 import me.filby.neptune.runescript.compiler.trigger.TriggerType
+import me.filby.neptune.runescript.compiler.type.PrimitiveType
 import me.filby.neptune.runescript.compiler.type.Type
 
 /**
@@ -170,7 +171,8 @@ enum class ClientTriggerType(
     IF_FLASHING_TAB(158, subjectMode = SubjectMode.None), // clicking a tab during tutorial
 
     MOVE(159, subjectMode = SubjectMode.None),
-    MOVECHECK(160, subjectMode = SubjectMode.Name),
+    MOVECHECK(160, subjectMode = SubjectMode.Name, returns = PrimitiveType.BOOLEAN),
+    AI_MOVECHECK(161, subjectMode = SubjectMode.Name, returns = PrimitiveType.BOOLEAN),
     ;
 
     override val identifier: String get() = name.lowercase()

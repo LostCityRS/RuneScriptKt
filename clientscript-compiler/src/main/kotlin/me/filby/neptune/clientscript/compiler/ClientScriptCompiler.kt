@@ -12,6 +12,7 @@ import me.filby.neptune.clientscript.compiler.type.ParamType
 import me.filby.neptune.clientscript.compiler.type.ScriptVarType
 import me.filby.neptune.runescript.compiler.ScriptCompiler
 import me.filby.neptune.runescript.compiler.type.MetaType
+import me.filby.neptune.runescript.compiler.type.PrimitiveType
 import me.filby.neptune.runescript.compiler.type.Type
 import me.filby.neptune.runescript.compiler.type.wrapped.VarNpcType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarPlayerType
@@ -44,6 +45,11 @@ class ClientScriptCompiler(
         types.register("queue", MetaType.Script(ClientTriggerType.QUEUE, MetaType.Any, MetaType.Nothing))
         types.register("timer", MetaType.Script(ClientTriggerType.TIMER, MetaType.Any, MetaType.Nothing))
         types.register("softtimer", MetaType.Script(ClientTriggerType.SOFTTIMER, MetaType.Any, MetaType.Nothing))
+        types.register("movecheck", MetaType.Script(ClientTriggerType.MOVECHECK, MetaType.Unit, PrimitiveType.BOOLEAN))
+        types.register(
+            "npc_movecheck",
+            MetaType.Script(ClientTriggerType.AI_MOVECHECK, MetaType.Unit, PrimitiveType.BOOLEAN)
+        )
 
         // allow assignment of namedobj to obj
         types.addTypeChecker { left, right -> left == ScriptVarType.OBJ && right == ScriptVarType.NAMEDOBJ }
@@ -66,6 +72,8 @@ class ClientScriptCompiler(
         addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler("softtimer", TimerCommandHandler(types.find("softtimer")))
         addDynamicCommandHandler("settimer", TimerCommandHandler(types.find("timer")))
+        addDynamicCommandHandler("setmovecheck", TimerCommandHandler(types.find("movecheck")))
+        addDynamicCommandHandler("npc_setmovecheck", TimerCommandHandler(types.find("ai_movecheck")))
 
         // symbol loaders
         addTsvConstantLoaders()
