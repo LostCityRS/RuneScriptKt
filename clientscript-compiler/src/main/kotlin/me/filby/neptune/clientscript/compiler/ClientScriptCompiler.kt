@@ -3,6 +3,7 @@ package me.filby.neptune.clientscript.compiler
 import me.filby.neptune.clientscript.compiler.command.DbFindCommandHandler
 import me.filby.neptune.clientscript.compiler.command.DbGetFieldCommandHandler
 import me.filby.neptune.clientscript.compiler.command.EnumCommandHandler
+import me.filby.neptune.clientscript.compiler.command.MoveCheckCommandHandler
 import me.filby.neptune.clientscript.compiler.command.ParamCommandHandler
 import me.filby.neptune.clientscript.compiler.command.QueueCommandHandler
 import me.filby.neptune.clientscript.compiler.command.TimerCommandHandler
@@ -72,8 +73,8 @@ class ClientScriptCompiler(
         addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler("softtimer", TimerCommandHandler(types.find("softtimer")))
         addDynamicCommandHandler("settimer", TimerCommandHandler(types.find("timer")))
-        addDynamicCommandHandler("setmovecheck", TimerCommandHandler(types.find("movecheck")))
-        addDynamicCommandHandler("npc_setmovecheck", TimerCommandHandler(types.find("ai_movecheck")))
+        addDynamicCommandHandler("setmovecheck", MoveCheckCommandHandler(types.find("movecheck")))
+        addDynamicCommandHandler("npc_setmovecheck", MoveCheckCommandHandler(types.find("ai_movecheck")))
 
         // symbol loaders
         addTsvConstantLoaders()
