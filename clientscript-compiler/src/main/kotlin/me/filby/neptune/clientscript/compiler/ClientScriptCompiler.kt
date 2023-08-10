@@ -48,7 +48,7 @@ class ClientScriptCompiler(
         types.register("softtimer", MetaType.Script(ClientTriggerType.SOFTTIMER, MetaType.Any, MetaType.Nothing))
         types.register("movecheck", MetaType.Script(ClientTriggerType.MOVECHECK, MetaType.Unit, PrimitiveType.BOOLEAN))
         types.register(
-            "npc_movecheck",
+            "ai_movecheck",
             MetaType.Script(ClientTriggerType.AI_MOVECHECK, MetaType.Unit, PrimitiveType.BOOLEAN)
         )
 
@@ -56,55 +56,56 @@ class ClientScriptCompiler(
         types.addTypeChecker { left, right -> left == ScriptVarType.OBJ && right == ScriptVarType.NAMEDOBJ }
 
         // register the dynamic command handlers
-        addDynamicCommandHandler("enum", EnumCommandHandler())
-        addDynamicCommandHandler("oc_param", ParamCommandHandler(ScriptVarType.OBJ))
-        addDynamicCommandHandler("obj_param", ParamCommandHandler(null))
-        addDynamicCommandHandler("nc_param", ParamCommandHandler(ScriptVarType.NPC))
-        addDynamicCommandHandler("npc_param", ParamCommandHandler(null))
-        addDynamicCommandHandler("lc_param", ParamCommandHandler(ScriptVarType.LOC))
-        addDynamicCommandHandler("loc_param", ParamCommandHandler(null))
-        addDynamicCommandHandler("struct_param", ParamCommandHandler(ScriptVarType.STRUCT))
         addDynamicCommandHandler("db_find", DbFindCommandHandler(true))
         addDynamicCommandHandler("db_find_refine", DbFindCommandHandler(true))
         addDynamicCommandHandler("db_getfield", DbGetFieldCommandHandler())
-        addDynamicCommandHandler("weakqueue", QueueCommandHandler(types.find("weakqueue")))
-        addDynamicCommandHandler("queue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler("enum", EnumCommandHandler())
+        addDynamicCommandHandler("lc_param", ParamCommandHandler(ScriptVarType.LOC))
+        addDynamicCommandHandler("loc_param", ParamCommandHandler(null))
         addDynamicCommandHandler("longqueue", QueueCommandHandler(types.find("queue")))
-        addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
-        addDynamicCommandHandler("softtimer", TimerCommandHandler(types.find("softtimer")))
-        addDynamicCommandHandler("settimer", TimerCommandHandler(types.find("timer")))
-        addDynamicCommandHandler("setmovecheck", MoveCheckCommandHandler(types.find("movecheck")))
+        addDynamicCommandHandler("nc_param", ParamCommandHandler(ScriptVarType.NPC))
+        addDynamicCommandHandler("npc_param", ParamCommandHandler(null))
         addDynamicCommandHandler("npc_setmovecheck", MoveCheckCommandHandler(types.find("ai_movecheck")))
+        addDynamicCommandHandler("obj_param", ParamCommandHandler(null))
+        addDynamicCommandHandler("oc_param", ParamCommandHandler(ScriptVarType.OBJ))
+        addDynamicCommandHandler("queue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler("setmovecheck", MoveCheckCommandHandler(types.find("movecheck")))
+        addDynamicCommandHandler("settimer", TimerCommandHandler(types.find("timer")))
+        addDynamicCommandHandler("softtimer", TimerCommandHandler(types.find("softtimer")))
+        addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler("struct_param", ParamCommandHandler(ScriptVarType.STRUCT))
+        addDynamicCommandHandler("weakqueue", QueueCommandHandler(types.find("weakqueue")))
 
         // symbol loaders
         addTsvConstantLoaders()
 
-        addTsvLoader("stat", ScriptVarType.STAT)
-        addTsvLoader("synth", ScriptVarType.SYNTH)
-        addTsvLoader("locshape", ScriptVarType.LOC_SHAPE)
-        addTsvLoader("model", ScriptVarType.MODEL)
-        addTsvLoader("interface", ScriptVarType.INTERFACE)
-        addTsvLoader("component", ScriptVarType.COMPONENT)
         addTsvLoader("category", ScriptVarType.CATEGORY)
-        addTsvLoader("loc", ScriptVarType.LOC)
-        addTsvLoader("npc", ScriptVarType.NPC)
-        addTsvLoader("obj", ScriptVarType.NAMEDOBJ)
-        addTsvLoader("inv", ScriptVarType.INV)
-        addTsvLoader("enum", ScriptVarType.ENUM)
-        addTsvLoader("struct", ScriptVarType.STRUCT)
-        addTsvLoader("seq", ScriptVarType.SEQ)
-        addTsvLoader("spotanim", ScriptVarType.SPOTANIM)
-        addTsvLoader("dbtable", ScriptVarType.DBTABLE)
-        addTsvLoader("dbrow", ScriptVarType.DBROW)
+        addTsvLoader("component", ScriptVarType.COMPONENT)
         addTsvLoader("dbcolumn") { DbColumnType(it) }
-        addTsvLoader("param") { ParamType(it) }
-        addTsvLoader("varp") { VarPlayerType(it) }
-        addTsvLoader("varn") { VarNpcType(it) }
-        addTsvLoader("mesanim", ScriptVarType.MESANIM)
+        addTsvLoader("dbrow", ScriptVarType.DBROW)
+        addTsvLoader("dbtable", ScriptVarType.DBTABLE)
+        addTsvLoader("enum", ScriptVarType.ENUM)
+        addTsvLoader("fontmetrics", ScriptVarType.FONTMETRICS)
         addTsvLoader("hunt", ScriptVarType.HUNT)
+        addTsvLoader("interface", ScriptVarType.INTERFACE)
+        addTsvLoader("inv", ScriptVarType.INV)
+        addTsvLoader("loc", ScriptVarType.LOC)
+        addTsvLoader("locshape", ScriptVarType.LOC_SHAPE)
+        addTsvLoader("mesanim", ScriptVarType.MESANIM)
+        addTsvLoader("model", ScriptVarType.MODEL)
+        addTsvLoader("movespeed", ScriptVarType.MOVESPEED)
+        addTsvLoader("npc", ScriptVarType.NPC)
         addTsvLoader("npc_mode", ScriptVarType.NPC_MODE)
         addTsvLoader("npc_stat", ScriptVarType.NPC_STAT)
-        addTsvLoader("movespeed", ScriptVarType.MOVESPEED)
+        addTsvLoader("obj", ScriptVarType.NAMEDOBJ)
+        addTsvLoader("param") { ParamType(it) }
+        addTsvLoader("seq", ScriptVarType.SEQ)
+        addTsvLoader("spotanim", ScriptVarType.SPOTANIM)
+        addTsvLoader("stat", ScriptVarType.STAT)
+        addTsvLoader("struct", ScriptVarType.STRUCT)
+        addTsvLoader("synth", ScriptVarType.SYNTH)
+        addTsvLoader("varn") { VarNpcType(it) }
+        addTsvLoader("varp") { VarPlayerType(it) }
     }
 
     /**

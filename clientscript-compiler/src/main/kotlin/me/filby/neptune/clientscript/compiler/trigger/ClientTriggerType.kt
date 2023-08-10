@@ -167,12 +167,14 @@ enum class ClientTriggerType(
 
     LOGIN(155, subjectMode = SubjectMode.None),
     LOGOUT(156, subjectMode = SubjectMode.None),
-    MAPENTER(157, subjectMode = SubjectMode.None),
+    MAPENTER(157, subjectMode = SubjectMode.None), // entering a mapsquare
     IF_FLASHING_TAB(158, subjectMode = SubjectMode.None), // clicking a tab during tutorial
 
-    MOVE(159, subjectMode = SubjectMode.None),
-    MOVECHECK(160, subjectMode = SubjectMode.Name, returns = PrimitiveType.BOOLEAN),
+    MOVE(159, subjectMode = SubjectMode.None), // movement trigger
+    MOVECHECK(160, subjectMode = SubjectMode.Name, returns = PrimitiveType.BOOLEAN), // pre-movement trigger
     AI_MOVECHECK(161, subjectMode = SubjectMode.Name, returns = PrimitiveType.BOOLEAN),
+
+    LEVELUP(162, subjectMode = SubjectMode.Type(ScriptVarType.STAT)),
     ;
 
     override val identifier: String get() = name.lowercase()
