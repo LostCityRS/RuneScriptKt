@@ -27,6 +27,7 @@ enum class ScriptVarType(
     GRAPHIC('d'),
     FONTMETRICS('f'),
     ENUM('g'),
+    HUNT('h'), // not confirmed real code
     JINGLE('j'),
     LOC('l'),
     MODEL('m'),
