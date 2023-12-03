@@ -36,6 +36,8 @@ enum class ClientScriptOpcode(val id: Int, val largeOperand: Boolean = false) {
     PUSH_ARRAY_INT(26, true),
     POP_ARRAY_INT(27, true),
     SWITCH(28, true),
+    PUSH_VARS(29, true),
+    POP_VARS(30, true),
 
     // Number ops (4600-4699)
     ADD(4600),

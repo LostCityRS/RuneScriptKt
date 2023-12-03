@@ -17,6 +17,7 @@ import me.filby.neptune.runescript.compiler.type.PrimitiveType
 import me.filby.neptune.runescript.compiler.type.Type
 import me.filby.neptune.runescript.compiler.type.wrapped.VarNpcType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarPlayerType
+import me.filby.neptune.runescript.compiler.type.wrapped.VarSharedType
 import me.filby.neptune.runescript.compiler.writer.ScriptWriter
 import java.nio.file.Path
 import kotlin.io.path.Path
@@ -106,6 +107,7 @@ class ClientScriptCompiler(
         addTsvLoader("synth", ScriptVarType.SYNTH)
         addTsvLoader("varn") { VarNpcType(it) }
         addTsvLoader("varp") { VarPlayerType(it) }
+        addTsvLoader("vars") { VarSharedType(it) }
     }
 
     /**
