@@ -278,7 +278,8 @@ public class AstBuilder(
     }
 
     override fun visitGameVariable(ctx: GameVariableContext): Node {
-        return GameVariableExpression(ctx.location, ctx.advancedIdentifier().visit())
+        val dot = ctx.DOTMOD() != null
+        return GameVariableExpression(ctx.location, dot, ctx.advancedIdentifier().visit())
     }
 
     override fun visitConstantVariable(ctx: ConstantVariableContext): Node {

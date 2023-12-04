@@ -62,11 +62,25 @@ public sealed class Opcode<T : Any> {
     public object PushVar : Opcode<BasicSymbol>()
 
     /**
+     * Pushes the value of the dot game variable to the stack.
+     *
+     * Operand: The game variable.
+     */
+    public object PushVar2 : Opcode<BasicSymbol>()
+
+    /**
      * Pops a value from the stack and stores it in the game variable.
      *
      * Operand: The game variable.
      */
     public object PopVar : Opcode<BasicSymbol>()
+
+    /**
+     * Pops a value from the stack and stores it in the dot game variable.
+     *
+     * Operand: The game variable.
+     */
+    public object PopVar2 : Opcode<BasicSymbol>()
 
     /**
      * Defines a local array variable.

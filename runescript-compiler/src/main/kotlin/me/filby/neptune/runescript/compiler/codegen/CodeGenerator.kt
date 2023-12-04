@@ -435,7 +435,10 @@ public class CodeGenerator(
             }
             when (reference) {
                 is LocalVariableSymbol -> instruction(Opcode.PopLocalVar, reference)
-                is BasicSymbol -> instruction(Opcode.PopVar, reference)
+                is BasicSymbol -> {
+                    check(variable is GameVariableExpression)
+                    instruction(if (!variable.dot) Opcode.PopVar else Opcode.PopVar2, reference)
+                }
                 else -> error("Unsupported reference type: ${reference.javaClass.simpleName}")
             }
         }
@@ -481,7 +484,7 @@ public class CodeGenerator(
             return
         }
         gameVariableExpression.lineInstruction()
-        instruction(Opcode.PushVar, reference)
+        instruction(if (!gameVariableExpression.dot) Opcode.PushVar else Opcode.PushVar2, reference)
     }
 
     override fun visitConstantVariableExpression(constantVariableExpression: ConstantVariableExpression) {

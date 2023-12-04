@@ -18,6 +18,7 @@ PLUS        : '+' ;
 MINUS       : '-' ;
 MUL         : '*' ;
 DIV         : '/' ;
+DOTMOD      : '.%' ;
 MOD         : '%' ;
 AND         : '&' ;
 OR          : '|' ;

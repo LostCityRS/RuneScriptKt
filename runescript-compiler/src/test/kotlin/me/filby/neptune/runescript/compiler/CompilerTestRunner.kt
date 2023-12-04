@@ -18,8 +18,6 @@ import me.filby.neptune.runescript.compiler.type.MetaType
 import me.filby.neptune.runescript.compiler.type.PrimitiveType
 import me.filby.neptune.runescript.compiler.type.TupleType
 import me.filby.neptune.runescript.compiler.type.Type
-import me.filby.neptune.runescript.compiler.type.wrapped.VarBitType
-import me.filby.neptune.runescript.compiler.type.wrapped.VarClientType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarPlayerType
 import me.filby.neptune.runescript.runtime.impl.opcodes.CoreOpcodesBase
 import me.filby.neptune.runescript.runtime.impl.opcodes.MathOpcodesBase
@@ -134,9 +132,6 @@ private class CommandSymbolLoader : SymbolLoader {
     override fun SymbolTable.load(compiler: ScriptCompiler) {
         // fake config symbols
         addBasic(VarPlayerType(PrimitiveType.INT), "varp")
-        addBasic(VarBitType, "varbit")
-        addBasic(VarClientType(PrimitiveType.INT), "varc")
-        addBasic(VarClientType(PrimitiveType.STRING), "varcstr")
         addBasic(compiler.types.find("npc"), "hans")
         addBasic(compiler.types.find("npc"), "complex npc name")
 

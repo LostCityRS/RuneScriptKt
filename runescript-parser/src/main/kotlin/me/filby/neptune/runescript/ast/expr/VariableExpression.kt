@@ -79,13 +79,17 @@ public class LocalVariableExpression(
  * %var
  * ```
  */
-public class GameVariableExpression(source: NodeSourceLocation, name: Identifier) : VariableExpression(source, name) {
+public class GameVariableExpression(
+    source: NodeSourceLocation,
+    public val dot: Boolean,
+    name: Identifier
+) : VariableExpression(source, name) {
     override fun <R> accept(visitor: AstVisitor<R>): R {
         return visitor.visitGameVariableExpression(this)
     }
 
     override fun hashCode(): Int {
-        return Objects.hashCode(name)
+        return Objects.hash(dot, name)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -97,7 +101,14 @@ public class GameVariableExpression(source: NodeSourceLocation, name: Identifier
             return false
         }
 
-        return name == other.name
+        return dot == other.dot && name == other.name
+    }
+
+    override fun toString(): String {
+        return MoreObjects.toStringHelper(this)
+            .add("dot", dot)
+            .add("name", name)
+            .toString()
     }
 }
 

@@ -121,7 +121,7 @@ abstract class BinaryScriptWriter(
         instruction(op, id)
     }
 
-    override fun BinaryScriptWriterContext.writePushVar(symbol: BasicSymbol) {
+    override fun BinaryScriptWriterContext.writePushVar(symbol: BasicSymbol, dot: Boolean) {
         val id = idProvider.get(symbol)
         val opcode = when (symbol.type) {
             is VarPlayerType -> ClientScriptOpcode.PUSH_VARP
@@ -129,10 +129,14 @@ abstract class BinaryScriptWriter(
             is VarSharedType -> ClientScriptOpcode.PUSH_VARS
             else -> error(symbol)
         }
-        instruction(opcode, id)
+        var operand = id
+        if (dot) {
+            operand += 1 shl 16
+        }
+        instruction(opcode, operand)
     }
 
-    override fun BinaryScriptWriterContext.writePopVar(symbol: BasicSymbol) {
+    override fun BinaryScriptWriterContext.writePopVar(symbol: BasicSymbol, dot: Boolean) {
         val id = idProvider.get(symbol)
         val opcode = when (symbol.type) {
             is VarPlayerType -> ClientScriptOpcode.POP_VARP
@@ -140,7 +144,11 @@ abstract class BinaryScriptWriter(
             is VarSharedType -> ClientScriptOpcode.POP_VARS
             else -> error(symbol)
         }
-        instruction(opcode, id)
+        var operand = id
+        if (dot) {
+            operand += 1 shl 16
+        }
+        instruction(opcode, operand)
     }
 
     override fun BinaryScriptWriterContext.writeDefineArray(symbol: LocalVariableSymbol) {

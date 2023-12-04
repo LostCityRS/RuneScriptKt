@@ -164,6 +164,7 @@ localArrayVariable
 
 gameVariable
     : MOD advancedIdentifier
+    | DOTMOD advancedIdentifier
     ;
 
 constantVariable
