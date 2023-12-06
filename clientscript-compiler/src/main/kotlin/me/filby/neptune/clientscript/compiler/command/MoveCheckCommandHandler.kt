@@ -4,8 +4,6 @@ import me.filby.neptune.runescript.compiler.configuration.command.DynamicCommand
 import me.filby.neptune.runescript.compiler.configuration.command.TypeCheckingContext
 import me.filby.neptune.runescript.compiler.type
 import me.filby.neptune.runescript.compiler.type.MetaType
-import me.filby.neptune.runescript.compiler.type.PrimitiveType
-import me.filby.neptune.runescript.compiler.type.TupleType
 import me.filby.neptune.runescript.compiler.type.Type
 
 class MoveCheckCommandHandler(timerType: Type) : DynamicCommandHandler {
@@ -13,9 +11,8 @@ class MoveCheckCommandHandler(timerType: Type) : DynamicCommandHandler {
 
     override fun TypeCheckingContext.typeCheck() {
         checkArgument(0, triggerType) // script
-        checkArgument(1, PrimitiveType.INT) // duration
 
-        checkArgumentTypes(TupleType(triggerType, PrimitiveType.INT))
+        checkArgumentTypes(triggerType)
         expression.type = MetaType.Unit
     }
 }

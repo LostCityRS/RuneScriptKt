@@ -121,7 +121,6 @@ enum class ClientTriggerType(
     AI_OPPLAYER4(111, subjectMode = SubjectMode.Type(ScriptVarType.NPC)),
     AI_OPPLAYER5(112, subjectMode = SubjectMode.Type(ScriptVarType.NPC)),
 
-    WEAKQUEUE(115, allowParameters = true),
     QUEUE(116, allowParameters = true),
     AI_QUEUE1(117, subjectMode = SubjectMode.Type(ScriptVarType.NPC), parameters = PrimitiveType.INT),
     AI_QUEUE2(118, subjectMode = SubjectMode.Type(ScriptVarType.NPC), parameters = PrimitiveType.INT),

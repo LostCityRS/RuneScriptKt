@@ -43,7 +43,6 @@ class ClientScriptCompiler(
         types.register("varp", VarPlayerType(MetaType.Any))
         types.register("proc", MetaType.Script(ClientTriggerType.PROC, MetaType.Unit, MetaType.Unit))
         types.register("label", MetaType.Script(ClientTriggerType.LABEL, MetaType.Unit, MetaType.Nothing))
-        types.register("weakqueue", MetaType.Script(ClientTriggerType.WEAKQUEUE, MetaType.Any, MetaType.Nothing))
         types.register("queue", MetaType.Script(ClientTriggerType.QUEUE, MetaType.Any, MetaType.Nothing))
         types.register("timer", MetaType.Script(ClientTriggerType.TIMER, MetaType.Any, MetaType.Nothing))
         types.register("softtimer", MetaType.Script(ClientTriggerType.SOFTTIMER, MetaType.Any, MetaType.Nothing))
@@ -75,7 +74,7 @@ class ClientScriptCompiler(
         addDynamicCommandHandler("softtimer", TimerCommandHandler(types.find("softtimer")))
         addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler("struct_param", ParamCommandHandler(ScriptVarType.STRUCT))
-        addDynamicCommandHandler("weakqueue", QueueCommandHandler(types.find("weakqueue")))
+        addDynamicCommandHandler("weakqueue", QueueCommandHandler(types.find("queue")))
 
         // symbol loaders
         addTsvConstantLoaders()
