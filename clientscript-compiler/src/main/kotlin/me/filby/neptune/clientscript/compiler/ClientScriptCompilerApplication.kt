@@ -26,6 +26,7 @@ fun main(args: Array<String>) {
     val sourcePaths = config.sourcePaths.map { Path(it) }
     val symbolPaths = config.symbolPaths.map { Path(it) }
     val excludePaths = config.excludePaths.map { Path(it) }
+    val checkPointers = config.checkPointers
     val (binaryWriterConfig) = config.writers
 
     val mapper = SymbolMapper()
@@ -39,7 +40,7 @@ fun main(args: Array<String>) {
 
     // load commands and clientscript id mappings
     val commandPointers = hashMapOf<String, PointerHolder>()
-    loadSpecialSymbols(symbolPaths, mapper, commandPointers)
+    loadSpecialSymbols(symbolPaths, mapper, commandPointers, checkPointers)
 
     // setup compiler and execute it
     val compiler = ClientScriptCompiler(sourcePaths, excludePaths, writer, commandPointers, symbolPaths, mapper)
@@ -58,6 +59,7 @@ private fun loadConfig(configPath: Path): ClientScriptCompilerConfig {
             "sources" to "sourcePaths",
             "symbols" to "symbolPaths",
             "excluded" to "excludePaths",
+            "check_pointers" to "checkPointers",
             "writer" to "writers",
         )
         mapping<BinaryFileWriterConfig>("output" to "outputPath")
@@ -70,6 +72,7 @@ private fun loadSpecialSymbols(
     symbolsPaths: List<Path>,
     mapper: SymbolMapper,
     commandPointers: MutableMap<String, PointerHolder>,
+    checkPointers: Boolean,
 ) {
     for (symbolPath in symbolsPaths) {
         val commandMappings = symbolPath.resolve("commands.sym")
@@ -79,7 +82,7 @@ private fun loadSpecialSymbols(
                 val id = split[0].toInt()
                 val name = split[1]
 
-                if (split.size > 2) {
+                if (checkPointers && split.size > 2) {
                     val requiredText = split.getOrNull(2)
                     val setTextTemp = split.getOrNull(3)
                     val setText = setTextTemp?.substringAfter("CONDITIONAL:")

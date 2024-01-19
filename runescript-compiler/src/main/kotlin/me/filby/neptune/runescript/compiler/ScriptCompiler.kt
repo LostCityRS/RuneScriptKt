@@ -312,6 +312,11 @@ public open class ScriptCompiler(
     }
 
     private fun checkPointers(scripts: List<RuneScript>): Boolean {
+        if (commandPointers.isEmpty()) {
+            // early return if there is no pointer information for any command
+            return false
+        }
+
         val diagnostics = Diagnostics()
 
         val pointerChecker = PointerChecker(diagnostics, scripts, commandPointers)
