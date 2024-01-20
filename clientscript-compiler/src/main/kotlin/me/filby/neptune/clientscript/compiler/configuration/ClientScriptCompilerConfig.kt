@@ -7,5 +7,6 @@ data class ClientScriptCompilerConfig(
     val sourcePaths: List<String> = listOf("src/"),
     val symbolPaths: List<String> = listOf("symbols/"),
     val excludePaths: List<String> = emptyList(),
+    val checkPointers: Boolean = true,
     val writers: ClientScriptWriterConfig = ClientScriptWriterConfig(),
 )

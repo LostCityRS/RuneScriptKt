@@ -1,10 +1,12 @@
 package me.filby.neptune.clientscript.compiler.trigger
 
 import me.filby.neptune.clientscript.compiler.type.ScriptVarType
+import me.filby.neptune.runescript.compiler.pointer.PointerType
 import me.filby.neptune.runescript.compiler.trigger.SubjectMode
 import me.filby.neptune.runescript.compiler.trigger.TriggerType
 import me.filby.neptune.runescript.compiler.type.PrimitiveType
 import me.filby.neptune.runescript.compiler.type.Type
+import java.util.EnumSet
 
 /**
  * An enumeration of valid trigger types for use in ClientScript.
@@ -16,6 +18,7 @@ enum class ClientTriggerType(
     override val parameters: Type? = null,
     override val allowReturns: Boolean = false,
     override val returns: Type? = null,
+    override val pointers: Set<PointerType>? = null,
 ) : TriggerType {
     PROC(0, allowParameters = true, allowReturns = true),
     LABEL(1, allowParameters = true),
