@@ -51,7 +51,7 @@ enum class ScriptVarType(
     MOVESPEED('Ý'),
     // LONG
     ENTITYOVERLAY('-'),
-    DBTABLE(null),
+    DBTABLE('Ø'), // unconfirmed code
     STRINGVECTOR('¸'),
     MESANIM('Á'),
     VERIFY_OBJECT('®', representation = "verifyobj"),

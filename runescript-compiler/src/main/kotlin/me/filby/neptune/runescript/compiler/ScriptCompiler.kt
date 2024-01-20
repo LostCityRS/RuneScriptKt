@@ -20,6 +20,7 @@ import me.filby.neptune.runescript.compiler.type.wrapped.WrappedType
 import me.filby.neptune.runescript.compiler.writer.ScriptWriter
 import me.filby.neptune.runescript.parser.ScriptParser
 import java.nio.file.Path
+import kotlin.io.path.Path
 import kotlin.io.path.absolute
 import kotlin.system.measureTimeMillis
 
@@ -27,8 +28,9 @@ import kotlin.system.measureTimeMillis
  * An entry point for compiling scripts.
  */
 public open class ScriptCompiler(
-    sourcePath: Path,
-    private val scriptWriter: ScriptWriter
+    sourcePaths: List<Path>,
+    excludePaths: List<Path>,
+    private val scriptWriter: ScriptWriter,
 ) {
     /**
      * Logger for this class.
@@ -36,9 +38,14 @@ public open class ScriptCompiler(
     private val logger = InlineLogger()
 
     /**
-     * The root folder path that contains the source code.
+     * The paths that contain the source code.
      */
-    private val sourcePath: Path = sourcePath.absolute().normalize()
+    private val sourcePaths: List<Path> = sourcePaths.map { it.absolute().normalize() }
+
+    /**
+     * The paths that contain source code that is (mostly) excluded.
+     */
+    private val excludePaths: List<Path> = excludePaths.map { it.absolute().normalize() }
 
     /**
      * The root table that contains all global symbols.
@@ -190,26 +197,28 @@ public open class ScriptCompiler(
     private fun parse(): Pair<Boolean, List<ScriptFile>> {
         val diagnostics = Diagnostics()
 
-        logger.info { "Parsing files in $sourcePath" }
         val fileNodes = mutableListOf<ScriptFile>()
-        // iterate over all folders and files in the source path
         var fileCount = 0
-        for (file in sourcePath.toFile().walkTopDown()) {
-            // TODO ability to configure file extension
-            // skip directories and non .cs2 files
-            if (file.isDirectory || file.extension != "rs2") {
-                continue
-            }
-
-            val time = measureTimeMillis {
-                val errorListener = ParserErrorListener(file.absolutePath, diagnostics)
-                val node = ScriptParser.createScriptFile(file.toPath(), errorListener)
-                if (node != null) {
-                    fileNodes += node
+        for (sourcePath in sourcePaths) {
+            logger.info { "Parsing files in $sourcePath" }
+            // iterate over all folders and files in the source path
+            for (file in sourcePath.toFile().walkTopDown()) {
+                // TODO ability to configure file extension
+                // skip directories and non .cs2 files
+                if (file.isDirectory || file.extension != "rs2") {
+                    continue
                 }
+
+                val time = measureTimeMillis {
+                    val errorListener = ParserErrorListener(file.absolutePath, diagnostics)
+                    val node = ScriptParser.createScriptFile(file.toPath(), errorListener)
+                    if (node != null) {
+                        fileNodes += node
+                    }
+                }
+                fileCount++
+                logger.trace { "Parsed $file in ${time}ms" }
             }
-            fileCount++
-            logger.trace { "Parsed $file in ${time}ms" }
         }
         logger.info { "Parsed $fileCount files" }
 
@@ -217,6 +226,7 @@ public open class ScriptCompiler(
         with(diagnosticsHandler) {
             diagnostics.handleParse()
         }
+
         return !diagnostics.hasErrors() to fileNodes
     }
 
@@ -230,9 +240,10 @@ public open class ScriptCompiler(
         // pre-type check: this adds all scripts to the symbol table for lookup in the next phase
         logger.debug { "Starting pre-type checking" }
         val preTypeCheckingTime = measureTimeMillis {
+            val preTypeChecking = PreTypeChecking(types, triggers, rootTable, diagnostics)
             for (file in files) {
                 val time = measureTimeMillis {
-                    file.accept(PreTypeChecking(types, triggers, rootTable, diagnostics))
+                    file.accept(preTypeChecking)
                 }
                 logger.trace { "Pre-type checked ${file.source.name} in ${time}ms" }
             }
@@ -242,9 +253,10 @@ public open class ScriptCompiler(
         // type check: this does all major type checking
         logger.debug { "Starting type checking" }
         val typeCheckingTime = measureTimeMillis {
+            val typeChecking = TypeChecking(types, triggers, rootTable, dynamicCommandHandlers, diagnostics)
             for (file in files) {
                 val time = measureTimeMillis {
-                    file.accept(TypeChecking(types, triggers, rootTable, dynamicCommandHandlers, diagnostics))
+                    file.accept(typeChecking)
                 }
                 logger.trace { "Type checked ${file.source.name} in ${time}ms" }
             }
@@ -273,7 +285,7 @@ public open class ScriptCompiler(
         val codegenTime = measureTimeMillis {
             for (file in files) {
                 val time = measureTimeMillis {
-                    val codegen = CodeGenerator(types, dynamicCommandHandlers, diagnostics)
+                    val codegen = CodeGenerator(rootTable, dynamicCommandHandlers, diagnostics)
                     file.accept(codegen)
                     scripts.addAll(codegen.scripts)
                 }
@@ -298,6 +310,11 @@ public open class ScriptCompiler(
         val writingTime = measureTimeMillis {
             scriptWriter.use {
                 for (script in scripts) {
+                    if (isExcluded(script.sourceName)) {
+                        logger.trace { "Skipping writing of excluded file: ${script.sourceName}" }
+                        continue
+                    }
+
                     val scriptWriteTimer = measureTimeMillis {
                         it.write(script)
                     }
@@ -306,6 +323,21 @@ public open class ScriptCompiler(
             }
         }
         logger.debug { "Finished script writing in ${writingTime}ms" }
+    }
+
+    /**
+     * Checks if [sourceName] is within any of the excluded paths. Invalid [Path]s
+     * will return `false`.
+     */
+    private fun isExcluded(sourceName: String): Boolean {
+        val sourcePath = try {
+            Path(sourceName)
+        } catch (_: Exception) {
+            // not a valid source path so the exclusions are not relevant
+            return false
+        }
+
+        return excludePaths.any { sourcePath == it || sourcePath.startsWith(it) }
     }
 
     public companion object {

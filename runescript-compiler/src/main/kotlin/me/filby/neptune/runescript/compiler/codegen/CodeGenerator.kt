@@ -6,6 +6,7 @@ import me.filby.neptune.runescript.ast.Parameter
 import me.filby.neptune.runescript.ast.Script
 import me.filby.neptune.runescript.ast.ScriptFile
 import me.filby.neptune.runescript.ast.expr.ArithmeticExpression
+import me.filby.neptune.runescript.ast.expr.BasicStringPart
 import me.filby.neptune.runescript.ast.expr.BinaryExpression
 import me.filby.neptune.runescript.ast.expr.BooleanLiteral
 import me.filby.neptune.runescript.ast.expr.CalcExpression
@@ -15,6 +16,7 @@ import me.filby.neptune.runescript.ast.expr.CommandCallExpression
 import me.filby.neptune.runescript.ast.expr.ConstantVariableExpression
 import me.filby.neptune.runescript.ast.expr.CoordLiteral
 import me.filby.neptune.runescript.ast.expr.Expression
+import me.filby.neptune.runescript.ast.expr.ExpressionStringPart
 import me.filby.neptune.runescript.ast.expr.GameVariableExpression
 import me.filby.neptune.runescript.ast.expr.Identifier
 import me.filby.neptune.runescript.ast.expr.IntegerLiteral
@@ -26,6 +28,7 @@ import me.filby.neptune.runescript.ast.expr.NullLiteral
 import me.filby.neptune.runescript.ast.expr.ParenthesizedExpression
 import me.filby.neptune.runescript.ast.expr.ProcCallExpression
 import me.filby.neptune.runescript.ast.expr.StringLiteral
+import me.filby.neptune.runescript.ast.expr.StringPart
 import me.filby.neptune.runescript.ast.statement.ArrayDeclarationStatement
 import me.filby.neptune.runescript.ast.statement.AssignmentStatement
 import me.filby.neptune.runescript.ast.statement.BlockStatement
@@ -56,19 +59,19 @@ import me.filby.neptune.runescript.compiler.symbol
 import me.filby.neptune.runescript.compiler.symbol.BasicSymbol
 import me.filby.neptune.runescript.compiler.symbol.LocalVariableSymbol
 import me.filby.neptune.runescript.compiler.symbol.ScriptSymbol
+import me.filby.neptune.runescript.compiler.symbol.SymbolTable
 import me.filby.neptune.runescript.compiler.trigger.CommandTrigger
 import me.filby.neptune.runescript.compiler.triggerType
 import me.filby.neptune.runescript.compiler.type
 import me.filby.neptune.runescript.compiler.type.BaseVarType
 import me.filby.neptune.runescript.compiler.type.MetaType
 import me.filby.neptune.runescript.compiler.type.TupleType
-import me.filby.neptune.runescript.compiler.type.TypeManager
 
 /**
  * A [AstVisitor] implementation that converts AST nodes into a set of instructions.
  */
 public class CodeGenerator(
-    private val typeManager: TypeManager,
+    private val rootTable: SymbolTable,
     private val dynamicCommands: MutableMap<String, DynamicCommandHandler>,
     private val diagnostics: Diagnostics
 ) : AstVisitor<Unit> {
@@ -547,7 +550,7 @@ public class CodeGenerator(
     private fun emitDynamicCommand(name: String, expression: Expression): Boolean {
         val dynamicCommand = dynamicCommands[name] ?: return false
         with(dynamicCommand) {
-            val context = CodeGeneratorContext(this@CodeGenerator, expression, diagnostics)
+            val context = CodeGeneratorContext(this@CodeGenerator, rootTable, expression, diagnostics)
             context.generateCode()
         }
         return true
@@ -665,8 +668,20 @@ public class CodeGenerator(
 
     override fun visitJoinedStringExpression(joinedStringExpression: JoinedStringExpression) {
         joinedStringExpression.parts.visit()
-        joinedStringExpression.lineInstruction()
-        instruction(Opcode.JoinString, joinedStringExpression.parts.size)
+
+        if (joinedStringExpression.parts.size > 1) {
+            joinedStringExpression.lineInstruction()
+            instruction(Opcode.JoinString, joinedStringExpression.parts.size)
+        }
+    }
+
+    override fun visitJoinedStringPart(stringPart: StringPart) {
+        stringPart.lineInstruction()
+        when (stringPart) {
+            is BasicStringPart -> instruction(Opcode.PushConstantString, stringPart.value)
+            is ExpressionStringPart -> stringPart.expression.visit()
+            else -> error("Unsupported StringPart: ${stringPart::class}")
+        }
     }
 
     override fun visitIdentifier(identifier: Identifier) {
