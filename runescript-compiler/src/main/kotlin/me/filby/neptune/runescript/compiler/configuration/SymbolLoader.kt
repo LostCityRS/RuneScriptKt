@@ -42,8 +42,8 @@ public interface SymbolLoader {
      *
      * Returns the [BasicSymbol] that was inserted.
      */
-    public fun SymbolTable.addBasic(type: Type, name: String): BasicSymbol {
-        val symbol = BasicSymbol(name, type)
+    public fun SymbolTable.addBasic(type: Type, name: String, protected: Boolean = false): BasicSymbol {
+        val symbol = BasicSymbol(name, type, protected)
         if (!insert(SymbolType.Basic(type), symbol)) {
             error("Unable to add basic: type=$type, name=$name")
         }

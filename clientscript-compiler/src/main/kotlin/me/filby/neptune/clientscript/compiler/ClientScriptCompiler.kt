@@ -101,15 +101,16 @@ class ClientScriptCompiler(
         addSymLoader("npc_mode", ScriptVarType.NPC_MODE)
         addSymLoader("npc_stat", ScriptVarType.NPC_STAT)
         addSymLoader("obj", ScriptVarType.NAMEDOBJ)
-        addSymLoader("param") { ParamType(it) }
+        addSymLoader("overlayinterface", ScriptVarType.OVERLAYINTERFACE)
+        addSymLoader("param", ::ParamType)
         addSymLoader("seq", ScriptVarType.SEQ)
         addSymLoader("spotanim", ScriptVarType.SPOTANIM)
         addSymLoader("stat", ScriptVarType.STAT)
         addSymLoader("struct", ScriptVarType.STRUCT)
         addSymLoader("synth", ScriptVarType.SYNTH)
-        addSymLoader("varn") { VarNpcType(it) }
-        addSymLoader("varp") { VarPlayerType(it) }
-        addSymLoader("vars") { VarSharedType(it) }
+        addSymLoader("varn", ::VarNpcType)
+        addProtectedSymLoader("varp", ::VarPlayerType)
+        addSymLoader("vars", ::VarSharedType)
     }
 
     /**
@@ -165,6 +166,38 @@ class ClientScriptCompiler(
                     .filter { it.isFile && it.extension == "sym" }
                 for (file in files) {
                     addSymbolLoader(TsvSymbolLoader(mapper, file.toPath(), typeSuppler))
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper for loading external symbols from `sym` files with a specific [type] protection flag.
+     */
+    private fun addProtectedSymLoader(name: String, type: Type) {
+        addProtectedSymLoader(name) { type }
+    }
+
+    /**
+     * Helper for loading external symbols from `sym` files with subtypes and protection flag.
+     */
+    private fun addProtectedSymLoader(name: String, typeSuppler: (subTypes: Type) -> Type) {
+        for (symbolPath in symbolPaths) {
+            // look for {symbol_path}/{name}.sym
+            val typeFile = symbolPath.resolve("$name.sym")
+            if (typeFile.exists()) {
+                addSymbolLoader(TsvProtectedSymbolLoader(mapper, typeFile, typeSuppler))
+            }
+
+            // look for {symbol_path}/{name}/**.sym
+            val typeDir = symbolPath.resolve(name)
+            if (typeDir.exists() && typeDir.isDirectory()) {
+                val files = typeDir
+                    .toFile()
+                    .walkTopDown()
+                    .filter { it.isFile && it.extension == "sym" }
+                for (file in files) {
+                    addSymbolLoader(TsvProtectedSymbolLoader(mapper, file.toPath(), typeSuppler))
                 }
             }
         }

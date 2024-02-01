@@ -19,5 +19,5 @@ public sealed interface Symbol {
 public data class LocalVariableSymbol(override val name: String, val type: Type) : Symbol
 
 // symbols with constant values, new ones should also be included in TypeChecking.isConstantSymbol
-public data class BasicSymbol(override val name: String, val type: Type) : Symbol
+public data class BasicSymbol(override val name: String, val type: Type, val protected: Boolean = false) : Symbol
 public data class ConstantSymbol(override val name: String, val value: String) : Symbol

@@ -22,6 +22,7 @@ enum class ScriptVarType(
     AREA('R'),
     STAT('S'),
     NPC_STAT('T'),
+    WRITEINV('V'),
     MAPAREA('`', representation = "wma"),
     // COORDGRID
     GRAPHIC('d'),

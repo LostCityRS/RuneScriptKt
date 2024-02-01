@@ -12,8 +12,8 @@ import me.filby.neptune.runescript.compiler.pointer.PointerType
 import me.filby.neptune.runescript.compiler.symbol.BasicSymbol
 import me.filby.neptune.runescript.compiler.symbol.ScriptSymbol
 import me.filby.neptune.runescript.compiler.trigger.TriggerType
-import me.filby.neptune.runescript.compiler.type.wrapped.VarClanSettingsType
-import me.filby.neptune.runescript.compiler.type.wrapped.VarClanType
+import me.filby.neptune.runescript.compiler.type.wrapped.VarNpcType
+import me.filby.neptune.runescript.compiler.type.wrapped.VarPlayerType
 import java.util.EnumSet
 import java.util.IdentityHashMap
 import java.util.LinkedList
@@ -192,7 +192,7 @@ internal class PointerChecker(
             }
 
             fun logProcRequirement(node: InstructionNode) {
-                if (node.instruction == null || node.instruction.opcode != Opcode.Gosub) {
+                if (node.instruction?.opcode != Opcode.Gosub && node.instruction?.opcode != Opcode.Jump) {
                     return
                 }
 
@@ -321,13 +321,41 @@ internal class PointerChecker(
                 val symbol = instruction.operand as ScriptSymbol
                 pointer in symbol.pointers.required
             }
-            Opcode.PushVar, Opcode.PopVar -> {
+            Opcode.PushVar -> {
                 val symbol = instruction.operand as BasicSymbol
                 when (symbol.type) {
-                    // is VarPlayerType -> pointer == PointerType.ACTIVE_PLAYER
-                    // is VarBitType -> pointer == PointerType.ACTIVE_PLAYER
-                    is VarClanType -> pointer == PointerType.ACTIVE_CLANPROFILE
-                    is VarClanSettingsType -> pointer == PointerType.ACTIVE_CLANSETTINGS
+                    is VarPlayerType -> pointer == PointerType.ACTIVE_PLAYER
+                    is VarNpcType -> pointer == PointerType.ACTIVE_NPC
+                    else -> false
+                }
+            }
+            Opcode.PopVar -> {
+                val symbol = instruction.operand as BasicSymbol
+                when (symbol.type) {
+                    is VarPlayerType -> {
+                        symbol.protected && pointer == PointerType.P_ACTIVE_PLAYER ||
+                            !symbol.protected && pointer == PointerType.ACTIVE_PLAYER
+                    }
+                    is VarNpcType -> pointer == PointerType.ACTIVE_NPC
+                    else -> false
+                }
+            }
+            Opcode.PushVar2 -> {
+                val symbol = instruction.operand as BasicSymbol
+                when (symbol.type) {
+                    is VarPlayerType -> pointer == PointerType.ACTIVE_PLAYER2
+                    is VarNpcType -> pointer == PointerType.ACTIVE_NPC2
+                    else -> false
+                }
+            }
+            Opcode.PopVar2 -> {
+                val symbol = instruction.operand as BasicSymbol
+                when (symbol.type) {
+                    is VarPlayerType -> {
+                        symbol.protected && pointer == PointerType.P_ACTIVE_PLAYER2 ||
+                            !symbol.protected && pointer == PointerType.ACTIVE_PLAYER2
+                    }
+                    is VarNpcType -> pointer == PointerType.ACTIVE_NPC2
                     else -> false
                 }
             }

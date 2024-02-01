@@ -28,8 +28,43 @@ public class GraphGenerator(private val commandPointers: Map<String, PointerHold
                 val node = nodeCache.getOrCreate(instruction)
                 nodes += node
 
-                // TODO should exclude commands that return 'nothing' also
-                if (instruction.opcode !in TERMINAL_OPCODES) {
+                if (potentialConditionalPointer &&
+                    instruction.opcode == Opcode.BranchEquals &&
+                    checkInvertedConditional(block.instructions, instructionIdx)
+                ) {
+                    /**
+                     * CONVERT:
+                     *              branch_equals
+                     *             /             \
+                     *       branch if_end      code
+                     * INTO:
+                     *              branch_equals
+                     *             /             \
+                     *       setpointer         code
+                     *      /
+                     * branch if_end
+                     */
+                    check(instructionIdx + 1 < block.instructions.size)
+                    val next = block.instructions[instructionIdx + 1]
+                    val nextNode = nodeCache.getOrCreate(next)
+                    check(next.opcode == Opcode.Branch)
+
+                    val commandNode = block.instructions[instructionIdx - 2]
+                    if (commandNode.opcode != Opcode.Command) {
+                        error("...")
+                    }
+
+                    val commandName = (commandNode.operand as ScriptSymbol).name
+                    val pointers = commandPointers[commandName]!!.set
+                    val setPointerNode = PointerInstructionNode(pointers)
+                    nodes += setPointerNode
+
+                    node.addNext(setPointerNode)
+                    setPointerNode.addNext(nextNode)
+
+                    potentialConditionalPointer = false
+                } else if (instruction.opcode !in TERMINAL_OPCODES) {
+                    // TODO should exclude commands that return 'nothing' also
                     val next = if (instructionIdx + 1 < block.instructions.size) {
                         block.instructions[instructionIdx + 1]
                     } else if (blockIdx + 1 < blocks.size) {
@@ -102,6 +137,23 @@ public class GraphGenerator(private val commandPointers: Map<String, PointerHold
 
         val in2 = instructions[instructionIdx - 1]
         if (in2.opcode != Opcode.PushConstantInt || in2.operand != 1) {
+            return false
+        }
+        return true
+    }
+
+    private fun checkInvertedConditional(instructions: List<Instruction<*>>, instructionIdx: Int): Boolean {
+        if (instructionIdx < 2) {
+            return false
+        }
+
+        val inst1 = instructions[instructionIdx - 2]
+        if (!inst1.isConditionalPointerSetter()) {
+            return false
+        }
+
+        val in2 = instructions[instructionIdx - 1]
+        if (in2.opcode != Opcode.PushConstantInt || in2.operand != 0) {
             return false
         }
         return true

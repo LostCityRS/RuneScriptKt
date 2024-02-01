@@ -1,6 +1,7 @@
 package me.filby.neptune.runescript.compiler.configuration.command
 
 import me.filby.neptune.runescript.ast.Node
+import me.filby.neptune.runescript.ast.NodeSourceLocation
 import me.filby.neptune.runescript.ast.expr.CallExpression
 import me.filby.neptune.runescript.ast.expr.CommandCallExpression
 import me.filby.neptune.runescript.ast.expr.Expression
@@ -39,8 +40,12 @@ public data class CodeGeneratorContext(
     /**
      * Emits a new instruction with the given [opcode] and [operand].
      */
-    public fun <T : Any> instruction(opcode: Opcode<T>, operand: T) {
-        codeGenerator.instruction(opcode, operand)
+    public fun <T : Any> instruction(
+        opcode: Opcode<T>,
+        operand: T,
+        source: NodeSourceLocation? = null,
+    ) {
+        codeGenerator.instruction(opcode, operand, source)
     }
 
     /**
@@ -63,7 +68,7 @@ public data class CodeGeneratorContext(
             else -> error("Unsupported expression type.")
         } as? ScriptSymbol
         expression.lineInstruction()
-        instruction(Opcode.Command, checkNotNull(symbol))
+        instruction(Opcode.Command, checkNotNull(symbol), expression.source)
     }
 
     /**
