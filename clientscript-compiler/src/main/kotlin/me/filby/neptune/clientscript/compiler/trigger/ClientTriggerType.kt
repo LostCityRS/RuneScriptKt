@@ -838,7 +838,7 @@ enum class ClientTriggerType(
         returns = PrimitiveType.BOOLEAN,
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
     ),
-    IF_FLASHING_TAB(
+    TUTORIAL_CLICKSIDE(
         157,
         subjectMode = SubjectMode.None,
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
