@@ -160,7 +160,7 @@ public class CodeGenerator(
      */
     internal fun Node.lineInstruction() {
         if (source.line != lastLineNumber) {
-            instruction(Opcode.LineNumber, source.line)
+            // instruction(Opcode.LineNumber, source.line)
             lastLineNumber = source.line
         }
     }

@@ -193,22 +193,16 @@ public abstract class BaseScriptWriter<T : BaseScriptWriterContext>(public val i
         public fun RuneScript.generateLineNumberTable(): TreeMap<Int, Int> {
             val table = TreeMap<Int, Int>()
             var index = 0
+            var prevLine = -1
             for (block in blocks) {
                 val it = block.instructions.iterator()
                 while (it.hasNext()) {
                     val instruction = it.next()
-
-                    // check if the instruction is a linenumber
-                    if (instruction.opcode == Opcode.LineNumber) {
-                        // add it to the table
-                        table[index] = instruction.operand as Int
-
-                        // remove it from instructions
-                        it.remove()
-                        continue
+                    if (instruction.source != null && instruction.source.line != prevLine) {
+                        val line = instruction.source.line
+                        table[index] = line
+                        prevLine = line
                     }
-
-                    // increment the instruction index
                     index++
                 }
             }
