@@ -92,6 +92,7 @@ class ClientScriptCompiler(
         addSymLoader("hunt", ScriptVarType.HUNT)
         addSymLoader("interface", ScriptVarType.INTERFACE)
         addSymLoader("inv", ScriptVarType.INV)
+        addSymLoader("idk", ScriptVarType.IDKIT)
         addSymLoader("loc", ScriptVarType.LOC)
         addSymLoader("locshape", ScriptVarType.LOC_SHAPE)
         addSymLoader("mesanim", ScriptVarType.MESANIM)
