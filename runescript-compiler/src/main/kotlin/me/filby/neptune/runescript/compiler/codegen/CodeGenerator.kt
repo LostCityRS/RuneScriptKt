@@ -497,7 +497,11 @@ public class CodeGenerator(
             return
         }
         gameVariableExpression.lineInstruction()
-        instruction(if (!gameVariableExpression.dot) Opcode.PushVar else Opcode.PushVar2, reference, gameVariableExpression.source)
+        instruction(
+            if (!gameVariableExpression.dot) Opcode.PushVar else Opcode.PushVar2,
+            reference,
+            gameVariableExpression.source
+        )
     }
 
     override fun visitConstantVariableExpression(constantVariableExpression: ConstantVariableExpression) {
