@@ -22,7 +22,7 @@ enum class ClientTriggerType(
 ) : TriggerType {
     PROC(0, allowParameters = true, allowReturns = true, pointers = EnumSet.allOf(PointerType::class.java)),
     LABEL(1, allowParameters = true, pointers = EnumSet.allOf(PointerType::class.java)),
-    DEBUGPROC(2, allowParameters = true, pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)),
+    DEBUGPROC(2, allowParameters = true, pointers = EnumSet.of(PointerType.ACTIVE_PLAYER)),
 
     APNPC1(
         3,
