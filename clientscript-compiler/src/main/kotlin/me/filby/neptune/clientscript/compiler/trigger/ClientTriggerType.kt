@@ -849,18 +849,14 @@ enum class ClientTriggerType(
         subjectMode = SubjectMode.None,
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
     ),
-    MOVECHECK(
+    WALKTRIGGER(
         159,
         subjectMode = SubjectMode.Name,
-        allowReturns = true,
-        returns = PrimitiveType.BOOLEAN,
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
     ),
-    AI_MOVECHECK(
+    AI_WALKTRIGGER(
         160,
         subjectMode = SubjectMode.Name,
-        allowReturns = true,
-        returns = PrimitiveType.BOOLEAN,
         pointers = EnumSet.of(PointerType.ACTIVE_NPC)
     ),
 

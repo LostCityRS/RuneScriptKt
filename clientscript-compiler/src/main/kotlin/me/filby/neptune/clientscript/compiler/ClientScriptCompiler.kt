@@ -3,7 +3,6 @@ package me.filby.neptune.clientscript.compiler
 import me.filby.neptune.clientscript.compiler.command.DbFindCommandHandler
 import me.filby.neptune.clientscript.compiler.command.DbGetFieldCommandHandler
 import me.filby.neptune.clientscript.compiler.command.EnumCommandHandler
-import me.filby.neptune.clientscript.compiler.command.MoveCheckCommandHandler
 import me.filby.neptune.clientscript.compiler.command.ParamCommandHandler
 import me.filby.neptune.clientscript.compiler.command.QueueCommandHandler
 import me.filby.neptune.clientscript.compiler.command.TimerCommandHandler
@@ -49,10 +48,10 @@ class ClientScriptCompiler(
         types.register("queue", MetaType.Script(ClientTriggerType.QUEUE, MetaType.Any, MetaType.Nothing))
         types.register("timer", MetaType.Script(ClientTriggerType.TIMER, MetaType.Any, MetaType.Nothing))
         types.register("softtimer", MetaType.Script(ClientTriggerType.SOFTTIMER, MetaType.Any, MetaType.Nothing))
-        types.register("movecheck", MetaType.Script(ClientTriggerType.MOVECHECK, MetaType.Unit, PrimitiveType.BOOLEAN))
+        types.register("walktrigger", MetaType.Script(ClientTriggerType.WALKTRIGGER, MetaType.Any, MetaType.Nothing))
         types.register(
-            "ai_movecheck",
-            MetaType.Script(ClientTriggerType.AI_MOVECHECK, MetaType.Unit, PrimitiveType.BOOLEAN)
+            "ai_walktrigger",
+            MetaType.Script(ClientTriggerType.AI_WALKTRIGGER, MetaType.Any, MetaType.Nothing)
         )
 
         // allow assignment of namedobj to obj
@@ -68,11 +67,9 @@ class ClientScriptCompiler(
         addDynamicCommandHandler("longqueue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler("nc_param", ParamCommandHandler(ScriptVarType.NPC))
         addDynamicCommandHandler("npc_param", ParamCommandHandler(null))
-        addDynamicCommandHandler("npc_setmovecheck", MoveCheckCommandHandler(types.find("ai_movecheck")))
         addDynamicCommandHandler("obj_param", ParamCommandHandler(null))
         addDynamicCommandHandler("oc_param", ParamCommandHandler(ScriptVarType.OBJ))
         addDynamicCommandHandler("queue", QueueCommandHandler(types.find("queue")))
-        addDynamicCommandHandler("setmovecheck", MoveCheckCommandHandler(types.find("movecheck")))
         addDynamicCommandHandler("settimer", TimerCommandHandler(types.find("timer")))
         addDynamicCommandHandler("softtimer", TimerCommandHandler(types.find("softtimer")))
         addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
