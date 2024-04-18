@@ -13,7 +13,6 @@ import me.filby.neptune.clientscript.compiler.type.ScriptVarType
 import me.filby.neptune.runescript.compiler.ScriptCompiler
 import me.filby.neptune.runescript.compiler.pointer.PointerHolder
 import me.filby.neptune.runescript.compiler.type.MetaType
-import me.filby.neptune.runescript.compiler.type.PrimitiveType
 import me.filby.neptune.runescript.compiler.type.Type
 import me.filby.neptune.runescript.compiler.type.wrapped.VarNpcType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarPlayerType
