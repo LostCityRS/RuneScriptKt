@@ -844,6 +844,7 @@ enum class ClientTriggerType(
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
     ), // clicking a tab during tutorial
 
+    // may not exist at this time? area (per-tile triggers) exists later for sure
     MOVE(
         158,
         subjectMode = SubjectMode.None,
@@ -865,6 +866,13 @@ enum class ClientTriggerType(
         subjectMode = SubjectMode.Type(ScriptVarType.STAT),
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
     ),
+
+    // just in case we need something to fire on entering a mapsquare later
+    MAPTRIGGER(
+        162,
+        subjectMode = SubjectMode.None,
+        pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
+    )
     ;
 
     override val identifier: String get() = name.lowercase()
