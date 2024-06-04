@@ -269,11 +269,7 @@ internal class PreTypeChecking(
     private fun checkScriptParameters(trigger: TriggerType?, script: Script, parameters: List<Parameter>?) {
         val triggerParameterType = trigger?.parameters
         val scriptParameterType = script.parameterType
-        if (
-            trigger != null &&
-            (!trigger.allowParameters && triggerParameterType == null) &&
-            !parameters.isNullOrEmpty()
-        ) {
+        if (trigger != null && !trigger.allowParameters && !parameters.isNullOrEmpty()) {
             parameters.first().reportError(DiagnosticMessage.SCRIPT_TRIGGER_NO_PARAMETERS, trigger.identifier)
         } else if (triggerParameterType != null && scriptParameterType != triggerParameterType) {
             val expectedParameterType = triggerParameterType.representation
