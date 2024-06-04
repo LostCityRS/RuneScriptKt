@@ -209,7 +209,7 @@ public open class ScriptCompiler(
         val fileNodes = mutableListOf<ScriptFile>()
         var fileCount = 0
         for (sourcePath in sourcePaths) {
-            logger.info { "Parsing files in $sourcePath" }
+            logger.debug { "Parsing files in $sourcePath" }
             // iterate over all folders and files in the source path
             for (file in sourcePath.toFile().walkTopDown()) {
                 // TODO ability to configure file extension
@@ -229,7 +229,7 @@ public open class ScriptCompiler(
                 logger.trace { "Parsed $file in ${time}ms" }
             }
         }
-        logger.info { "Parsed $fileCount files" }
+        logger.debug { "Parsed $fileCount files" }
 
         // call the diagnostics handler
         with(diagnosticsHandler) {

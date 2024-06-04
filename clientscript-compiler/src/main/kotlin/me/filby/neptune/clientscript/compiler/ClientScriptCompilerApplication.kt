@@ -64,7 +64,7 @@ private fun loadConfig(configPath: Path): ClientScriptCompilerConfig {
         )
         mapping<BinaryFileWriterConfig>("output" to "outputPath")
     }
-    logger.info { "Loading configuration from $configPath." }
+    logger.debug { "Loading configuration from $configPath." }
     return tomlMapper.decode<ClientScriptCompilerConfig>(configPath)
 }
 
