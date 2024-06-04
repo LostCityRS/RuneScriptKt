@@ -6,6 +6,8 @@ import me.filby.neptune.clientscript.compiler.command.EnumCommandHandler
 import me.filby.neptune.clientscript.compiler.command.ParamCommandHandler
 import me.filby.neptune.clientscript.compiler.command.QueueCommandHandler
 import me.filby.neptune.clientscript.compiler.command.TimerCommandHandler
+import me.filby.neptune.clientscript.compiler.command.debug.DumpCommandHandler
+import me.filby.neptune.clientscript.compiler.command.debug.ScriptCommandHandler
 import me.filby.neptune.clientscript.compiler.trigger.ClientTriggerType
 import me.filby.neptune.clientscript.compiler.type.DbColumnType
 import me.filby.neptune.clientscript.compiler.type.ParamType
@@ -83,6 +85,9 @@ class ClientScriptCompiler(
         addDynamicCommandHandler("db_find", DbFindCommandHandler(true))
         addDynamicCommandHandler("db_find_refine", DbFindCommandHandler(true))
         addDynamicCommandHandler("db_getfield", DbGetFieldCommandHandler())
+
+        addDynamicCommandHandler("dump", DumpCommandHandler())
+        addDynamicCommandHandler("script", ScriptCommandHandler())
 
         // symbol loaders
         addSymConstantLoaders()

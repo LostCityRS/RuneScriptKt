@@ -303,7 +303,7 @@ public class TypeChecking(
         is Literal<*> -> true
         is Identifier -> {
             val ref = expression.reference
-            ref != null && isConstantSymbol(ref)
+            ref == null || isConstantSymbol(ref)
         }
         else -> false
     }
@@ -382,6 +382,7 @@ public class TypeChecking(
 
         // visit the initializer if it exists to resolve references in it
         val initializer = arrayDeclarationStatement.initializer
+        initializer.typeHint = PrimitiveType.INT
         initializer.visit()
         checkTypeMatch(initializer, PrimitiveType.INT, initializer.type)
 
@@ -527,6 +528,14 @@ public class TypeChecking(
 
         // handle equality operator, which allows any type on either side as long as they match
         if (!checkTypeMatch(left, left.type, right.type, reportError = false)) {
+            operator.reportError(
+                DiagnosticMessage.BINOP_INVALID_TYPES,
+                operator.text,
+                left.type.representation,
+                right.type.representation
+            )
+            return false
+        } else if (left.type == PrimitiveType.STRING && right.type == PrimitiveType.STRING) {
             operator.reportError(
                 DiagnosticMessage.BINOP_INVALID_TYPES,
                 operator.text,
@@ -958,7 +967,7 @@ public class TypeChecking(
         } else if (hint is MetaType.Hook) {
             handleClientScriptExpression(stringLiteral, hint)
         } else if (hint !in LITERAL_TYPES) {
-            resolveSymbol(stringLiteral, stringLiteral.value, hint)
+            stringLiteral.reference = resolveSymbol(stringLiteral, stringLiteral.value, hint)
         } else {
             stringLiteral.type = PrimitiveType.STRING
         }
@@ -1024,10 +1033,20 @@ public class TypeChecking(
             return
         }
 
-        resolveSymbol(identifier, name, hint)
+        // error is reported in resolveSymbol
+        val symbol = resolveSymbol(identifier, name, hint) ?: return
+        if (symbol is ScriptSymbol && symbol.parameters != MetaType.Unit && symbol.trigger == CommandTrigger) {
+            identifier.reportError(
+                DiagnosticMessage.GENERIC_TYPE_MISMATCH,
+                "<unit>",
+                symbol.parameters.representation
+            )
+        }
+
+        identifier.reference = symbol
     }
 
-    private fun resolveSymbol(node: Expression, name: String, hint: Type?) {
+    private fun resolveSymbol(node: Expression, name: String, hint: Type?): Symbol? {
         // look through the current scopes table for a symbol with the given name and type
         var symbol: Symbol? = null
         var symbolType: Type? = null
@@ -1056,24 +1075,20 @@ public class TypeChecking(
             // unable to resolve the symbol
             node.type = MetaType.Error
             node.reportError(DiagnosticMessage.GENERIC_UNRESOLVED_SYMBOL, name)
-            return
+            return null
         }
 
-        // identifier.reportInfo("hint=%s, symbol=%s", hint?.representation ?: "null", symbol)
+        // node.reportInfo("hint=%s, symbol=%s", hint?.representation ?: "null", symbol)
 
         // compiler error if the symbol type isn't defined here
         if (symbolType == null) {
             node.type = MetaType.Error
             node.reportError(DiagnosticMessage.UNSUPPORTED_SYMBOLTYPE_TO_TYPE, symbol::class.java.simpleName)
-            return
+            return null
         }
 
-        when (node) {
-            is Identifier -> node.reference = symbol
-            is StringLiteral -> node.reference = symbol
-            else -> error(node)
-        }
         node.type = symbolType
+        return symbol
     }
 
     /**
