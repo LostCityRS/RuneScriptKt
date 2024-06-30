@@ -560,142 +560,102 @@ enum class ClientTriggerType(
     AI_QUEUE1(
         117,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE2(
         118,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE3(
         119,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE4(
         120,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE5(
         121,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE6(
         122,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE7(
         123,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE8(
         124,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE9(
         125,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE10(
         126,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE11(
         127,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE12(
         128,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE13(
         129,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE14(
         130,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE15(
         131,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE16(
         132,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE17(
         133,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE18(
         134,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE19(
         135,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
     AI_QUEUE20(
         136,
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
-        allowParameters = true,
-        parameters = PrimitiveType.INT,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC, PointerType.LAST_INT)
     ),
 
     SOFTTIMER(137, allowParameters = true, pointers = EnumSet.of(PointerType.ACTIVE_PLAYER)),
