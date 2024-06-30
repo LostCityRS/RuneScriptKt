@@ -41,8 +41,6 @@ class ClientScriptCompiler(
             allowDeclaration = false
         }
 
-        // todo: remove all the special *2 commands once dynamic+secondaries work
-
         // special types for commands
         types.register("dbcolumn", DbColumnType(MetaType.Any))
         types.register("varp", VarPlayerType(MetaType.Any))
@@ -62,11 +60,11 @@ class ClientScriptCompiler(
 
         // register the dynamic command handlers
         addDynamicCommandHandler("queue", QueueCommandHandler(types.find("queue")))
-        addDynamicCommandHandler("queue2", QueueCommandHandler(types.find("queue"))) // temporary
+        addDynamicCommandHandler(".queue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler("longqueue", QueueCommandHandler(types.find("queue")))
-        addDynamicCommandHandler("longqueue2", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler(".longqueue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler("settimer", TimerCommandHandler(types.find("timer")))
-        addDynamicCommandHandler("settimer2", TimerCommandHandler(types.find("timer"))) // temporary
+        addDynamicCommandHandler(".settimer", TimerCommandHandler(types.find("timer")))
         addDynamicCommandHandler("lc_param", ParamCommandHandler(ScriptVarType.LOC))
         addDynamicCommandHandler("loc_param", ParamCommandHandler(null))
         addDynamicCommandHandler("nc_param", ParamCommandHandler(ScriptVarType.NPC))
@@ -75,12 +73,16 @@ class ClientScriptCompiler(
         addDynamicCommandHandler("obj_param", ParamCommandHandler(null))
         // mid-late 2004
         addDynamicCommandHandler("weakqueue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler(".weakqueue", QueueCommandHandler(types.find("queue")))
         // late 2004
         addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler(".strongqueue", QueueCommandHandler(types.find("queue")))
         // 2005+
         addDynamicCommandHandler("enum", EnumCommandHandler())
         addDynamicCommandHandler("struct_param", ParamCommandHandler(ScriptVarType.STRUCT))
+        // 2009+
         addDynamicCommandHandler("softtimer", TimerCommandHandler(types.find("softtimer")))
+        addDynamicCommandHandler(".softtimer", TimerCommandHandler(types.find("softtimer")))
         // 2013+ / 2018+
         addDynamicCommandHandler("db_find", DbFindCommandHandler(true))
         addDynamicCommandHandler("db_find_refine", DbFindCommandHandler(true))
