@@ -17,6 +17,7 @@ import me.filby.neptune.runescript.compiler.returnType
 import me.filby.neptune.runescript.compiler.scope
 import me.filby.neptune.runescript.compiler.subjectReference
 import me.filby.neptune.runescript.compiler.symbol
+import me.filby.neptune.runescript.compiler.symbol.BasicSymbol
 import me.filby.neptune.runescript.compiler.symbol.LocalVariableSymbol
 import me.filby.neptune.runescript.compiler.symbol.ScriptSymbol
 import me.filby.neptune.runescript.compiler.symbol.SymbolTable
@@ -27,6 +28,7 @@ import me.filby.neptune.runescript.compiler.trigger.TriggerType
 import me.filby.neptune.runescript.compiler.triggerType
 import me.filby.neptune.runescript.compiler.type
 import me.filby.neptune.runescript.compiler.type.MetaType
+import me.filby.neptune.runescript.compiler.type.PrimitiveType
 import me.filby.neptune.runescript.compiler.type.TupleType
 import me.filby.neptune.runescript.compiler.type.Type
 import me.filby.neptune.runescript.compiler.type.TypeManager
@@ -251,15 +253,93 @@ internal class PreTypeChecking(
         error(mode)
     }
 
+    private fun tryParseMapZone(script: Script, coord: String): Int {
+        // format: level_mx_mz
+        val parts = coord.split("_")
+        if (parts.size != 3) {
+            script.name.reportError("mapzone subject must be of the form 'level_mx_mz'")
+            return -1
+        }
+
+        val (level, mx, mz) = parts
+        val levelInt = level.toInt()
+        val mxInt = mx.toInt()
+        val mzInt = mz.toInt()
+
+        if (mxInt < 0 || mxInt > 255 ||
+            mzInt < 0 || mzInt > 255
+        ) {
+            script.name.reportError("Invalid mapzone coord")
+            return -1
+        }
+
+        if (levelInt != 0) {
+            script.name.reportError("mapzone affects all levels, just specify 0")
+            return -1
+        }
+
+        val x = mxInt shl 6
+        val z = mzInt shl 6
+        return (z and 0x3fff) or ((x and 0x3fff) shl 14)
+    }
+
+    private fun tryParseZone(script: Script, coord: String): Int {
+        // format: level_mx_mz_lx_lz
+        val parts = coord.split("_")
+        if (parts.size != 5) {
+            script.name.reportError("zone subject must be of the form 'level_mx_mz_lx_lz'")
+            return -1
+        }
+
+        val (level, mx, mz, lx, lz) = coord.split("_")
+        val levelInt = level.toInt()
+        val mxInt = mx.toInt()
+        val mzInt = mz.toInt()
+        val lxInt = lx.toInt()
+        val lzInt = lz.toInt()
+
+        if (levelInt < 0 || levelInt > 3 ||
+            mxInt < 0 || mxInt > 255 ||
+            mzInt < 0 || mzInt > 255 ||
+            lxInt < 0 || lxInt > 63 ||
+            lzInt < 0 || lzInt > 63
+        ) {
+            script.name.reportError("Invalid zone coord")
+            return -1
+        }
+
+        if (lxInt % 8 != 0 || lzInt % 8 != 0) {
+            script.name.reportError("Local zone coord must be a multiple of 8")
+            return -1
+        }
+
+        val x = ((mxInt shl 6) or lxInt) shr 3 shl 3
+        val z = ((mzInt shl 6) or lzInt) shr 3 shl 3
+        return (z and 0x3fff) or ((x and 0x3fff) shl 14) or ((levelInt and 0x3) shl 28)
+    }
+
     /**
      * Attempts to find a reference to the subject of a script.
      */
     private fun resolveSubjectSymbol(script: Script, subject: String, type: Type) {
+        if (type == PrimitiveType.MAPZONE) {
+            val packed = tryParseMapZone(script, subject)
+            script.subjectReference = BasicSymbol(packed.toString(), type, false)
+            return
+        }
+
+        if (type == PrimitiveType.COORD) {
+            val packed = tryParseZone(script, subject)
+            script.subjectReference = BasicSymbol(packed.toString(), type, false)
+            return
+        }
+
         val symbol = rootTable.find(SymbolType.Basic(type), subject)
         if (symbol == null) {
             script.name.reportError(DiagnosticMessage.GENERIC_UNRESOLVED_SYMBOL, subject)
             return
         }
+
         script.subjectReference = symbol
     }
 

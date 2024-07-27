@@ -740,17 +740,12 @@ enum class ClientTriggerType(
         subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT),
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER, PointerType.LAST_COM)
     ),
-    INV_BUTTON1(
+    IF_CLOSE(
         148,
-        subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT),
-        pointers = EnumSet.of(
-            PointerType.ACTIVE_PLAYER,
-            PointerType.P_ACTIVE_PLAYER,
-            PointerType.LAST_ITEM,
-            PointerType.LAST_SLOT,
-        )
+        subjectMode = SubjectMode.Type(ScriptVarType.INTERFACE),
+        pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
     ),
-    INV_BUTTON2(
+    INV_BUTTON1(
         149,
         subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT),
         pointers = EnumSet.of(
@@ -760,7 +755,7 @@ enum class ClientTriggerType(
             PointerType.LAST_SLOT,
         )
     ),
-    INV_BUTTON3(
+    INV_BUTTON2(
         150,
         subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT),
         pointers = EnumSet.of(
@@ -770,7 +765,7 @@ enum class ClientTriggerType(
             PointerType.LAST_SLOT,
         )
     ),
-    INV_BUTTON4(
+    INV_BUTTON3(
         151,
         subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT),
         pointers = EnumSet.of(
@@ -780,7 +775,7 @@ enum class ClientTriggerType(
             PointerType.LAST_SLOT,
         )
     ),
-    INV_BUTTON5(
+    INV_BUTTON4(
         152,
         subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT),
         pointers = EnumSet.of(
@@ -790,8 +785,18 @@ enum class ClientTriggerType(
             PointerType.LAST_SLOT,
         )
     ),
-    INV_BUTTOND(
+    INV_BUTTON5(
         153,
+        subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT),
+        pointers = EnumSet.of(
+            PointerType.ACTIVE_PLAYER,
+            PointerType.P_ACTIVE_PLAYER,
+            PointerType.LAST_ITEM,
+            PointerType.LAST_SLOT,
+        )
+    ),
+    INV_BUTTOND(
+        154,
         subjectMode = SubjectMode.Type(ScriptVarType.COMPONENT),
         pointers = EnumSet.of(
             PointerType.ACTIVE_PLAYER,
@@ -800,59 +805,60 @@ enum class ClientTriggerType(
             PointerType.LAST_TARGETSLOT
         )
     ),
-    IF_CLOSE(
-        154,
-        subjectMode = SubjectMode.Type(ScriptVarType.INTERFACE),
+
+    WALKTRIGGER(
+        155,
+        subjectMode = SubjectMode.Name,
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
+    ),
+    AI_WALKTRIGGER(
+        156,
+        subjectMode = SubjectMode.Name,
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
     ),
 
     LOGIN(
-        155,
+        157,
         subjectMode = SubjectMode.None,
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
     ),
     LOGOUT(
-        156,
+        158,
         subjectMode = SubjectMode.None,
         allowReturns = true,
         returns = PrimitiveType.BOOLEAN,
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
     ),
-    TUTORIAL_CLICKSIDE(
-        157,
+    TUTORIAL(
+        159,
         subjectMode = SubjectMode.None,
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
     ), // clicking a tab during tutorial
-
-    // may not exist at this time? area (per-tile triggers) exists later for sure
-    MOVE(
-        158,
-        subjectMode = SubjectMode.None,
-        pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
-    ),
-    WALKTRIGGER(
-        159,
-        subjectMode = SubjectMode.Name,
-        pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
-    ),
-    AI_WALKTRIGGER(
+    ADVANCESTAT(
         160,
-        subjectMode = SubjectMode.Name,
-        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
-    ),
-
-    LEVELUP(
-        161,
         subjectMode = SubjectMode.Type(ScriptVarType.STAT),
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
     ),
-
-    // just in case we need something to fire on entering a mapsquare later
-    MAPTRIGGER(
-        162,
-        subjectMode = SubjectMode.None,
+    MAPZONE(
+        161,
+        subjectMode = SubjectMode.Type(PrimitiveType.MAPZONE),
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
-    )
+    ),
+    MAPZONEEXIT(
+        162,
+        subjectMode = SubjectMode.Type(PrimitiveType.MAPZONE),
+        pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
+    ),
+    ZONE(
+        163,
+        subjectMode = SubjectMode.Type(PrimitiveType.COORD),
+        pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
+    ),
+    ZONEEXIT(
+        164,
+        subjectMode = SubjectMode.Type(PrimitiveType.COORD),
+        pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
+    ),
     ;
 
     override val identifier: String get() = name.lowercase()

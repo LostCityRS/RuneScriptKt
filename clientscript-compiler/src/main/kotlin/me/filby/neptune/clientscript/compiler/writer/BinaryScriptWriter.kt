@@ -16,6 +16,7 @@ import me.filby.neptune.runescript.compiler.symbol.Symbol
 import me.filby.neptune.runescript.compiler.trigger.SubjectMode
 import me.filby.neptune.runescript.compiler.type.BaseVarType
 import me.filby.neptune.runescript.compiler.type.MetaType
+import me.filby.neptune.runescript.compiler.type.PrimitiveType
 import me.filby.neptune.runescript.compiler.type.wrapped.ArrayType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarNpcType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarPlayerType
@@ -64,7 +65,10 @@ abstract class BinaryScriptWriter(
         var lookupKey = trigger.id
         if (subjectMode is SubjectMode.Type && subject != null) {
             val subjectType = subject.type
-            val subjectId = idProvider.get(subject)
+            val subjectId = when (subject.type) {
+                PrimitiveType.MAPZONE, PrimitiveType.COORD -> subject.name.toInt()
+                else -> idProvider.get(subject)
+            }
             val type = if (subjectType == ScriptVarType.CATEGORY) 1 else 2
             lookupKey += (type shl 8) or (subjectId shl 10)
         }

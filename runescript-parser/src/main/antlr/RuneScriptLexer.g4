@@ -49,6 +49,7 @@ SWITCH_TYPE : 'switch_' IDENTIFIER ;
 INTEGER_LITERAL : '-'? Digit+ ;
 HEX_LITERAL     : '0' [xX] [0-9a-fA-F]+ ;
 COORD_LITERAL   : Digit+ '_' Digit+ '_' Digit+ '_' Digit+ '_' Digit+ ;
+MAPZONE_LITERAL : Digit+ '_' Digit+ '_' Digit+ ;
 BOOLEAN_LITERAL : 'true' | 'false' ;
 CHAR_LITERAL    : '\'' (CharEscapeSequence | ~['\\\r\n]) '\'' ;
 NULL_LITERAL    : 'null' ;

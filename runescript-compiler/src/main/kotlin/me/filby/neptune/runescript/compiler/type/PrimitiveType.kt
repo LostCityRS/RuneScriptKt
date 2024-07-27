@@ -20,6 +20,7 @@ public enum class PrimitiveType(
     STRING('s', BaseVarType.STRING, defaultValue = "", { allowArray = false; allowSwitch = false }),
     CHAR('z', defaultValue = -1),
     LONG('Ï', BaseVarType.LONG, defaultValue = -1L, { allowArray = false; allowSwitch = false }),
+    MAPZONE('0', defaultValue = -1), // like coord but no local parts
     ;
 
     override val representation: String = name.lowercase()

@@ -213,6 +213,8 @@ identifier
     | HEX_LITERAL
     | BOOLEAN_LITERAL
     | NULL_LITERAL
+    | COORD_LITERAL
+    | MAPZONE_LITERAL
     | TYPE_ARRAY
     | SWITCH_TYPE
     | DEF_TYPE
