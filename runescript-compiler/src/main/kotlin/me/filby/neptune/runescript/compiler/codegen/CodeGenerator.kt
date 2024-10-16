@@ -652,10 +652,15 @@ public class CodeGenerator(
     override fun visitNullLiteral(nullLiteral: NullLiteral) {
         nullLiteral.lineInstruction()
 
-        if (nullLiteral.type.baseType == BaseVarType.LONG) {
-            instruction(Opcode.PushConstantLong, -1L, nullLiteral.source)
+        val baseType = nullLiteral.type.baseType
+        if (baseType == BaseVarType.STRING) {
+            instruction(Opcode.PushConstantString, "null")
+            return
+        } else if (baseType == BaseVarType.LONG) {
+            instruction(Opcode.PushConstantLong, -1L)
             return
         }
+
         instruction(Opcode.PushConstantInt, -1, nullLiteral.source)
         if (nullLiteral.type is MetaType.Hook) {
             // hack to make null clientscript references work properly

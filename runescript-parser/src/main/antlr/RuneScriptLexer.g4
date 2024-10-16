@@ -70,16 +70,14 @@ fragment CharEscapeSequence
 
 // special
 QUOTE_OPEN      : '"' {depth++;} -> pushMode(String) ;
-IDENTIFIER      : [a-zA-Z0-9_+.]+
-                | [a-zA-Z0-9_+.] [a-zA-Z0-9_+.:]+ [a-zA-Z0-9_+.]
-                ;
+IDENTIFIER      : [a-zA-Z0-9_+.:]+ ;
 WHITESPACE      : [ \t\n\r]+ -> channel(HIDDEN) ;
 
 // string interpolation support
 mode String ;
 
 QUOTE_CLOSE         : '"' {depth--;} -> popMode ;
-STRING_TEXT         : StringEscapeSequence | ~('\\' | '"' | '<')+ ;
+STRING_TEXT         : StringEscapeSequence | ~('\\' | '"' | '<' | '\r' | '\n')+ ;
 STRING_TAG          : '<' Tag ('=' ~('<' | '>')+)? '>' ;
 STRING_CLOSE_TAG    : '</' Tag '>' ;
 STRING_PARTIAL_TAG  : '<' Tag '=' ;

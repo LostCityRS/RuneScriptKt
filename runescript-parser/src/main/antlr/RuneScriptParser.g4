@@ -10,8 +10,7 @@ scriptFile
 
 script
     : LBRACK trigger=identifier COMMA name=identifier RBRACK
-      (LPAREN parameterList? RPAREN)?
-      (LPAREN typeList? RPAREN)?
+      ((LPAREN parameterList? RPAREN) (LPAREN typeList? RPAREN)?)?
       statement*
     ;
 
@@ -121,16 +120,16 @@ condition
     ;
 
 calc
-    : CALC LPAREN arithemitic RPAREN
+    : CALC LPAREN arithmetic RPAREN
     ;
 
-arithemitic
-    : LPAREN arithemitic RPAREN                                                 # ArithemiticParenthesizedExpression
-    | arithemitic op=(MUL | DIV | MOD) arithemitic                              # ArithemiticBinaryExpression
-    | arithemitic op=(PLUS | MINUS) arithemitic                                 # ArithemiticBinaryExpression
-    | arithemitic op=AND arithemitic                                            # ArithemiticBinaryExpression
-    | arithemitic op=OR arithemitic                                             # ArithemiticBinaryExpression
-    | expression                                                                # ArithemiticNormalExpression
+arithmetic
+    : LPAREN arithmetic RPAREN                                                  # ArithmeticParenthesizedExpression
+    | arithmetic op=(MUL | DIV | MOD) arithmetic                                # ArithmeticBinaryExpression
+    | arithmetic op=(PLUS | MINUS) arithmetic                                   # ArithmeticBinaryExpression
+    | arithmetic op=AND arithmetic                                              # ArithmeticBinaryExpression
+    | arithmetic op=OR arithmetic                                               # ArithmeticBinaryExpression
+    | expression                                                                # ArithmeticNormalExpression
     ;
 
 call
