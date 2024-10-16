@@ -859,6 +859,16 @@ enum class ClientTriggerType(
         subjectMode = SubjectMode.Type(PrimitiveType.COORD),
         pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
     ),
+    CHANGESTAT(
+        165,
+        subjectMode = SubjectMode.Type(ScriptVarType.STAT),
+        pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
+    ),
+    AI_SPAWN(
+        166,
+        subjectMode = SubjectMode.Type(ScriptVarType.NPC),
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+    ),
     ;
 
     override val identifier: String get() = name.lowercase()
