@@ -67,6 +67,7 @@ import me.filby.neptune.runescript.compiler.symbol.SymbolType
 import me.filby.neptune.runescript.compiler.trigger.CommandTrigger
 import me.filby.neptune.runescript.compiler.trigger.TriggerManager
 import me.filby.neptune.runescript.compiler.trigger.TriggerType
+import me.filby.neptune.runescript.compiler.triggerType
 import me.filby.neptune.runescript.compiler.type
 import me.filby.neptune.runescript.compiler.type.MetaType
 import me.filby.neptune.runescript.compiler.type.PrimitiveType
@@ -624,6 +625,12 @@ public class TypeChecking(
     override fun visitJumpCallExpression(jumpCallExpression: JumpCallExpression) {
         if (labelTrigger == null) {
             jumpCallExpression.reportError("Jump expression not allowed.")
+            return
+        }
+
+        val currentScript = requireNotNull(jumpCallExpression.findParentByType<Script>())
+        if (currentScript.triggerType == procTrigger) {
+            jumpCallExpression.reportError("Unable to jump to labels from within a proc.")
             return
         }
 
