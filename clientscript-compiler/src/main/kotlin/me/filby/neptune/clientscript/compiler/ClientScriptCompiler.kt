@@ -3,6 +3,7 @@ package me.filby.neptune.clientscript.compiler
 import me.filby.neptune.clientscript.compiler.command.DbFindCommandHandler
 import me.filby.neptune.clientscript.compiler.command.DbGetFieldCommandHandler
 import me.filby.neptune.clientscript.compiler.command.EnumCommandHandler
+import me.filby.neptune.clientscript.compiler.command.LongQueueCommandHandler
 import me.filby.neptune.clientscript.compiler.command.ParamCommandHandler
 import me.filby.neptune.clientscript.compiler.command.QueueCommandHandler
 import me.filby.neptune.clientscript.compiler.command.TimerCommandHandler
@@ -61,8 +62,8 @@ class ClientScriptCompiler(
         // register the dynamic command handlers
         addDynamicCommandHandler("queue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler(".queue", QueueCommandHandler(types.find("queue")))
-        addDynamicCommandHandler("longqueue", QueueCommandHandler(types.find("queue")))
-        addDynamicCommandHandler(".longqueue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler("longqueue", LongQueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler(".longqueue", LongQueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler("settimer", TimerCommandHandler(types.find("timer")))
         addDynamicCommandHandler(".settimer", TimerCommandHandler(types.find("timer")))
         addDynamicCommandHandler("lc_param", ParamCommandHandler(ScriptVarType.LOC))
