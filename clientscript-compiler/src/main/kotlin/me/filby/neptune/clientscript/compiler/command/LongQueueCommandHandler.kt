@@ -42,7 +42,7 @@ class LongQueueCommandHandler(queueType: Type) : DynamicCommandHandler {
         // so we must build a string of the argument types to push
         if (arguments.size > 3) {
             val shortTypes = arguments
-                .subList(2, arguments.size)
+                .subList(3, arguments.size)
                 .mapNotNull { it.type.code }
                 .joinToString("")
             instruction(Opcode.PushConstantString, shortTypes)
