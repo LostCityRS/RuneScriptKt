@@ -44,8 +44,8 @@ class JagFileScriptWriter(
             val lastId = buffers.lastKey() ?: 0
 
             // write the number of entries (including gaps)
-            dat.p2(lastId + 1)
-            idx.p2(lastId + 1)
+            dat.p4(lastId + 1)
+            idx.p4(lastId + 1)
 
             // write version to dat file
             dat.p4(VERSION)
@@ -54,13 +54,13 @@ class JagFileScriptWriter(
                 val buffer = buffers[i]
                 if (buffer == null) {
                     // gap, no size
-                    idx.p2(0)
+                    idx.p4(0)
                     continue
                 }
 
                 // write the data to dat, and size to idx
                 val size = buffer.readableBytes()
-                idx.p2(size)
+                idx.p4(size)
                 buffer.readBytes(dat, size)
                 buffer.release()
             }
@@ -83,6 +83,6 @@ class JagFileScriptWriter(
     }
 
     private companion object {
-        const val VERSION = 21
+        const val VERSION = 22
     }
 }

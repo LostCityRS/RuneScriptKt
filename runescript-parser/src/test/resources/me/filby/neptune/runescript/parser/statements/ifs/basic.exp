@@ -1,6 +1,0 @@
-IfStatement() 1:1
- ConditionExpression() 1:5
-  IntegerLiteral(value=1) 1:5
-  Token(text==) 1:7
-  IntegerLiteral(value=1) 1:9
- BlockStatement() 1:12
