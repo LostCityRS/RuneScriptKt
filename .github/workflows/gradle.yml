@@ -20,11 +20,11 @@ jobs:
 
     - run: |
         ./gradlew build
-        rm clientscript-compiler/build/libs/neptune-clientscript-compiler-*-sources.jar
-        mv clientscript-compiler/build/libs/neptune-clientscript-compiler-*.jar clientscript-compiler/build/libs/RuneScriptCompiler.jar
-        sha256sum clientscript-compiler/build/libs/RuneScriptCompiler.jar | cut -d ' ' -f 1 | tr -d '\n' > clientscript-compiler/build/libs/RuneScriptCompiler.jar.sha256
+        rm serverscript-compiler/build/libs/neptune-serverscript-compiler-*-sources.jar
+        mv serverscript-compiler/build/libs/neptune-serverscript-compiler-*.jar serverscript-compiler/build/libs/RuneScriptCompiler.jar
+        sha256sum serverscript-compiler/build/libs/RuneScriptCompiler.jar | cut -d ' ' -f 1 | tr -d '\n' > serverscript-compiler/build/libs/RuneScriptCompiler.jar.sha256
 
     - uses: actions/upload-artifact@v4
       with:
         name: jar
-        path: clientscript-compiler/build/libs/*
+        path: serverscript-compiler/build/libs/*
