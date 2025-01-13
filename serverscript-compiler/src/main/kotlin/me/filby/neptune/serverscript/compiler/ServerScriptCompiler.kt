@@ -23,7 +23,6 @@ import me.filby.neptune.serverscript.compiler.type.ParamType
 import me.filby.neptune.serverscript.compiler.type.ScriptVarType
 import java.nio.file.Path
 import kotlin.io.path.exists
-import kotlin.io.path.isDirectory
 
 class ServerScriptCompiler(
     sourcePaths: List<Path>,
@@ -35,96 +34,112 @@ class ServerScriptCompiler(
 ) : ScriptCompiler(sourcePaths, excludePaths, scriptWriter, commandPointers) {
     fun setup() {
         triggers.registerAll<ServerTriggerType>()
-
-        // register types
         types.registerAll<ScriptVarType>()
         types.changeOptions("long") {
             allowDeclaration = false
         }
 
-        // special types for commands
-        types.register("dbcolumn", DbColumnType(MetaType.Any))
-        types.register("varp", VarPlayerType(MetaType.Any))
         types.register("proc", MetaType.Script(ServerTriggerType.PROC, MetaType.Unit, MetaType.Unit))
         types.register("label", MetaType.Script(ServerTriggerType.LABEL, MetaType.Unit, MetaType.Nothing))
-        types.register("queue", MetaType.Script(ServerTriggerType.QUEUE, MetaType.Any, MetaType.Nothing))
-        types.register("timer", MetaType.Script(ServerTriggerType.TIMER, MetaType.Any, MetaType.Nothing))
-        types.register("softtimer", MetaType.Script(ServerTriggerType.SOFTTIMER, MetaType.Any, MetaType.Nothing))
+
+        // allow assignment of namedobj to obj
+        types.addTypeChecker { left, right -> left == ScriptVarType.OBJ && right == ScriptVarType.NAMEDOBJ }
+
+        // todo: macros
+        addSymConstantLoaders()
+
         types.register("walktrigger", MetaType.Script(ServerTriggerType.WALKTRIGGER, MetaType.Any, MetaType.Nothing))
         types.register(
             "ai_walktrigger",
             MetaType.Script(ServerTriggerType.AI_WALKTRIGGER, MetaType.Any, MetaType.Nothing)
         )
 
-        // allow assignment of namedobj to obj
-        types.addTypeChecker { left, right -> left == ScriptVarType.OBJ && right == ScriptVarType.NAMEDOBJ }
-
-        // register the dynamic command handlers
+        types.register("queue", MetaType.Script(ServerTriggerType.QUEUE, MetaType.Any, MetaType.Nothing))
         addDynamicCommandHandler("queue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler(".queue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler("longqueue", LongQueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler(".longqueue", LongQueueCommandHandler(types.find("queue")))
+
+        types.register("timer", MetaType.Script(ServerTriggerType.TIMER, MetaType.Any, MetaType.Nothing))
         addDynamicCommandHandler("settimer", TimerCommandHandler(types.find("timer")))
         addDynamicCommandHandler(".settimer", TimerCommandHandler(types.find("timer")))
+
         addDynamicCommandHandler("lc_param", ParamCommandHandler(ScriptVarType.LOC))
         addDynamicCommandHandler("loc_param", ParamCommandHandler(null))
+        addSymLoader("loc", ScriptVarType.LOC)
+
         addDynamicCommandHandler("nc_param", ParamCommandHandler(ScriptVarType.NPC))
         addDynamicCommandHandler("npc_param", ParamCommandHandler(null))
+        addSymLoader("npc", ScriptVarType.NPC)
+
         addDynamicCommandHandler("oc_param", ParamCommandHandler(ScriptVarType.OBJ))
         addDynamicCommandHandler("obj_param", ParamCommandHandler(null))
-        // mid-late 2004
-        addDynamicCommandHandler("weakqueue", QueueCommandHandler(types.find("queue")))
-        addDynamicCommandHandler(".weakqueue", QueueCommandHandler(types.find("queue")))
-        // late 2004
-        addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
-        addDynamicCommandHandler(".strongqueue", QueueCommandHandler(types.find("queue")))
-        // 2005+
-        addDynamicCommandHandler("enum", EnumCommandHandler())
-        addDynamicCommandHandler("struct_param", ParamCommandHandler(ScriptVarType.STRUCT))
-        // 2009+
-        addDynamicCommandHandler("softtimer", TimerCommandHandler(types.find("softtimer")))
-        addDynamicCommandHandler(".softtimer", TimerCommandHandler(types.find("softtimer")))
-        // 2013+ / 2018+
-        addDynamicCommandHandler("db_find", DbFindCommandHandler(true))
-        addDynamicCommandHandler("db_find_refine", DbFindCommandHandler(true))
-        addDynamicCommandHandler("db_getfield", DbGetFieldCommandHandler())
+        addSymLoader("obj", ScriptVarType.NAMEDOBJ)
 
-        addDynamicCommandHandler("dump", DumpCommandHandler())
-        addDynamicCommandHandler("script", ScriptCommandHandler())
-
-        // symbol loaders
-        addSymConstantLoaders()
+        addSymLoader("component", ScriptVarType.COMPONENT)
+        addSymLoader("interface", ScriptVarType.INTERFACE)
+        addSymLoader("overlayinterface", ScriptVarType.OVERLAYINTERFACE)
+        addSymLoader("fontmetrics", ScriptVarType.FONTMETRICS)
 
         addSymLoader("category", ScriptVarType.CATEGORY)
-        addSymLoader("component", ScriptVarType.COMPONENT)
-        addSymLoader("dbcolumn") { DbColumnType(it) }
-        addSymLoader("dbrow", ScriptVarType.DBROW)
-        addSymLoader("dbtable", ScriptVarType.DBTABLE)
-        addSymLoader("enum", ScriptVarType.ENUM)
-        addSymLoader("fontmetrics", ScriptVarType.FONTMETRICS)
         addSymLoader("hunt", ScriptVarType.HUNT)
-        addSymLoader("interface", ScriptVarType.INTERFACE)
         addSymLoader("inv", ScriptVarType.INV)
         addSymLoader("idk", ScriptVarType.IDKIT)
-        addSymLoader("loc", ScriptVarType.LOC)
-        addSymLoader("locshape", ScriptVarType.LOC_SHAPE)
         addSymLoader("mesanim", ScriptVarType.MESANIM)
-        addSymLoader("model", ScriptVarType.MODEL)
-        addSymLoader("movespeed", ScriptVarType.MOVESPEED)
-        addSymLoader("npc", ScriptVarType.NPC)
-        addSymLoader("npc_mode", ScriptVarType.NPC_MODE)
-        addSymLoader("npc_stat", ScriptVarType.NPC_STAT)
-        addSymLoader("obj", ScriptVarType.NAMEDOBJ)
-        addSymLoader("overlayinterface", ScriptVarType.OVERLAYINTERFACE)
         addSymLoader("param", ::ParamType)
         addSymLoader("seq", ScriptVarType.SEQ)
         addSymLoader("spotanim", ScriptVarType.SPOTANIM)
-        addSymLoader("stat", ScriptVarType.STAT)
-        addSymLoader("struct", ScriptVarType.STRUCT)
-        addSymLoader("synth", ScriptVarType.SYNTH)
-        addSymLoader("varn", ::VarNpcType)
+
+        types.register("varp", VarPlayerType(MetaType.Any))
         addProtectedSymLoader("varp", ::VarPlayerType)
+        addSymLoader("varn", ::VarNpcType)
         addSymLoader("vars", ::VarSharedType)
+
+        addSymLoader("stat", ScriptVarType.STAT)
+        addSymLoader("locshape", ScriptVarType.LOC_SHAPE)
+        addSymLoader("movespeed", ScriptVarType.MOVESPEED)
+        addSymLoader("npc_mode", ScriptVarType.NPC_MODE)
+        addSymLoader("npc_stat", ScriptVarType.NPC_STAT)
+
+        addSymLoader("model", ScriptVarType.MODEL)
+        addSymLoader("synth", ScriptVarType.SYNTH)
+
+        // mid-late 2004
+        addDynamicCommandHandler("weakqueue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler(".weakqueue", QueueCommandHandler(types.find("queue")))
+        // todo: varbit type
+
+        // late 2004
+        addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler(".strongqueue", QueueCommandHandler(types.find("queue")))
+
+        // 2005
+        addDynamicCommandHandler("enum", EnumCommandHandler())
+        addSymLoader("enum", ScriptVarType.ENUM)
+        // todo: mes type
+
+        // 2006
+        // todo: runclientscript command handler
+
+        // 2009
+        addDynamicCommandHandler("struct_param", ParamCommandHandler(ScriptVarType.STRUCT))
+        addSymLoader("struct", ScriptVarType.STRUCT)
+        types.register("softtimer", MetaType.Script(ServerTriggerType.SOFTTIMER, MetaType.Any, MetaType.Nothing))
+        addDynamicCommandHandler("softtimer", TimerCommandHandler(types.find("softtimer")))
+        addDynamicCommandHandler(".softtimer", TimerCommandHandler(types.find("softtimer")))
+
+        // 2013 rs / 2018 osrs
+        types.register("dbcolumn", DbColumnType(MetaType.Any))
+        addDynamicCommandHandler("db_find", DbFindCommandHandler(true))
+        addDynamicCommandHandler("db_find_refine", DbFindCommandHandler(true))
+        addDynamicCommandHandler("db_getfield", DbGetFieldCommandHandler())
+        addSymLoader("dbcolumn") { DbColumnType(it) }
+        addSymLoader("dbrow", ScriptVarType.DBROW)
+        addSymLoader("dbtable", ScriptVarType.DBTABLE)
+
+        // debugging
+        addDynamicCommandHandler("dump", DumpCommandHandler())
+        addDynamicCommandHandler("script", ScriptCommandHandler())
     }
 
     /**
@@ -137,18 +152,6 @@ class ServerScriptCompiler(
             val constantsFile = symbolPath.resolve("constant.sym")
             if (constantsFile.exists()) {
                 addSymbolLoader(ConstantLoader(constantsFile))
-            }
-
-            // look for {symbol_path}/constant/**.sym
-            val constantDir = symbolPath.resolve("constant")
-            if (constantDir.exists() && constantDir.isDirectory()) {
-                val files = constantDir
-                    .toFile()
-                    .walkTopDown()
-                    .filter { it.isFile && it.extension == "sym" }
-                for (file in files) {
-                    addSymbolLoader(ConstantLoader(file.toPath()))
-                }
             }
         }
     }
@@ -170,18 +173,6 @@ class ServerScriptCompiler(
             if (typeFile.exists()) {
                 addSymbolLoader(TsvSymbolLoader(mapper, typeFile, typeSuppler))
             }
-
-            // look for {symbol_path}/{name}/**.sym
-            val typeDir = symbolPath.resolve(name)
-            if (typeDir.exists() && typeDir.isDirectory()) {
-                val files = typeDir
-                    .toFile()
-                    .walkTopDown()
-                    .filter { it.isFile && it.extension == "sym" }
-                for (file in files) {
-                    addSymbolLoader(TsvSymbolLoader(mapper, file.toPath(), typeSuppler))
-                }
-            }
         }
     }
 
@@ -201,18 +192,6 @@ class ServerScriptCompiler(
             val typeFile = symbolPath.resolve("$name.sym")
             if (typeFile.exists()) {
                 addSymbolLoader(TsvProtectedSymbolLoader(mapper, typeFile, typeSuppler))
-            }
-
-            // look for {symbol_path}/{name}/**.sym
-            val typeDir = symbolPath.resolve(name)
-            if (typeDir.exists() && typeDir.isDirectory()) {
-                val files = typeDir
-                    .toFile()
-                    .walkTopDown()
-                    .filter { it.isFile && it.extension == "sym" }
-                for (file in files) {
-                    addSymbolLoader(TsvProtectedSymbolLoader(mapper, file.toPath(), typeSuppler))
-                }
             }
         }
     }
