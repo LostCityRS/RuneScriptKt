@@ -661,7 +661,7 @@ public class TypeChecking(
                 expression is Identifier && expression.reference == null ||
                 expression is CallExpression && expression.reference == null
             ) {
-                val symbol = rootTable.find(SymbolType.ClientScript(commandTrigger), name)
+                val symbol = rootTable.find(SymbolType.ServerScript(commandTrigger), name)
                 if (symbol == null) {
                     expression.reportError(DiagnosticMessage.CUSTOM_HANDLER_NOSYMBOL)
                 }
@@ -680,7 +680,7 @@ public class TypeChecking(
     private fun checkCallExpression(call: CallExpression, trigger: TriggerType, unresolvedSymbolMessage: String) {
         // lookup the symbol using the symbol type and name
         val name = call.name.text
-        val symbolType = SymbolType.ClientScript(trigger)
+        val symbolType = SymbolType.ServerScript(trigger)
         val symbol = rootTable.find(symbolType, name)
         if (symbol == null) {
             call.type = MetaType.Error

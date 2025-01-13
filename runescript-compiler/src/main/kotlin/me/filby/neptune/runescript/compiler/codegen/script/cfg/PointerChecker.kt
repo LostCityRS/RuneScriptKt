@@ -213,37 +213,6 @@ internal class PointerChecker(
                 logProcRequirement(requireNode)
             }
             logProcRequirement(errorNode)
-
-            // for ((index, node) in graph.withIndex()) {
-            //     if (index == 0) {
-            //         continue
-            //     }
-            //     if (node is PointerInstructionNode) {
-            //         println("    $index[label=\"SetPointer ${node.set.joinToString { it.representation }}\"]")
-            //         continue
-            //     }
-            //     val operand = when (val operand = node.instruction?.operand) {
-            //         is ScriptSymbol.ClientScriptSymbol -> operand.name
-            //         is LocalVariableSymbol -> "${operand.type}:\$${operand.name}"
-            //         is BasicSymbol -> "${operand.type}:${operand.name}"
-            //         is Label -> operand.name
-            //         is SwitchTable -> operand.id
-            //         is Unit -> ""
-            //         else -> operand.toString()
-            //     }
-            //     if (node in path) {
-            //         println("    $index[label=\"${node.instruction?.opcode?.javaClass?.simpleName} ${operand}\" color=\"red\"]")
-            //     } else {
-            //         println("    $index[label=\"${node.instruction?.opcode?.javaClass?.simpleName} ${operand}\"]")
-            //     }
-            // }
-            //
-            // for (node in graph) {
-            //     val index = graph.indexOf(node)
-            //     for (next in node.next) {
-            //         println("    $index -> ${graph.indexOf(next)}")
-            //     }
-            // }
         }
     }
 

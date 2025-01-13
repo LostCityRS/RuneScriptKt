@@ -151,9 +151,9 @@ public open class ScriptCompiler(
      * Runs the compiler by loading external symbols and then actually running
      * the compile process.
      */
-    public fun run() {
+    public fun run(ext: String) {
         loadSymbols()
-        compile()
+        compile(ext)
     }
 
     /**
@@ -171,9 +171,9 @@ public open class ScriptCompiler(
     /**
      * Initiates the actual compile pipeline.
      */
-    private fun compile() {
+    private fun compile(ext: String) {
         // 1) Parse all files
-        val (parseSuccess, fileNodes) = parse()
+        val (parseSuccess, fileNodes) = parse(ext)
         if (!parseSuccess) {
             return
         }
@@ -203,7 +203,7 @@ public open class ScriptCompiler(
     /**
      * Parses all files in the source path and returns the parsed AST nodes.
      */
-    private fun parse(): Pair<Boolean, List<ScriptFile>> {
+    private fun parse(ext: String): Pair<Boolean, List<ScriptFile>> {
         val diagnostics = Diagnostics()
 
         val fileNodes = mutableListOf<ScriptFile>()
@@ -212,9 +212,8 @@ public open class ScriptCompiler(
             logger.debug { "Parsing files in $sourcePath" }
             // iterate over all folders and files in the source path
             for (file in sourcePath.toFile().walkTopDown()) {
-                // TODO ability to configure file extension
-                // skip directories and non .cs2 files
-                if (file.isDirectory || file.extension != "rs2") {
+                // skip directories and non-script files
+                if (file.isDirectory || file.extension != ext) {
                     continue
                 }
 

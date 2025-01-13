@@ -597,7 +597,7 @@ public class CodeGenerator(
     }
 
     override fun visitClientScriptExpression(clientScriptExpression: ClientScriptExpression) {
-        val symbol = clientScriptExpression.reference as? ScriptSymbol.ClientScriptSymbol
+        val symbol = clientScriptExpression.reference as? ScriptSymbol.ServerScriptSymbol
         if (symbol == null) {
             clientScriptExpression.reportError(DiagnosticMessage.SYMBOL_IS_NULL)
             return
@@ -610,7 +610,7 @@ public class CodeGenerator(
         // safety check in case there was a type with no char code defined
         check(argumentTypes.size == argumentTypesShort.length)
 
-        // write the clientscript reference and arguments
+        // write the script reference and arguments
         instruction(Opcode.PushConstantSymbol, symbol, clientScriptExpression.source)
         clientScriptExpression.arguments.visit()
 
@@ -662,6 +662,7 @@ public class CodeGenerator(
         }
 
         instruction(Opcode.PushConstantInt, -1, nullLiteral.source)
+
         if (nullLiteral.type is MetaType.Hook) {
             // hack to make null clientscript references work properly
             // TODO figure out better way to handle this
@@ -717,7 +718,7 @@ public class CodeGenerator(
         identifier.lineInstruction()
 
         // add the instruction based on reference type
-        if (reference is ScriptSymbol.ClientScriptSymbol && reference.trigger == CommandTrigger) {
+        if (reference is ScriptSymbol.ServerScriptSymbol && reference.trigger == CommandTrigger) {
             // attempt to call the dynamic command handlers code generation (if one exists)
             if (emitDynamicCommand(identifier.text, identifier)) {
                 return

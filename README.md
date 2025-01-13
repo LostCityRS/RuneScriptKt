@@ -2,7 +2,7 @@
 <h1>RuneScriptKt</h1>
 </div>
 
-A fork of [Neptune](https://github.com/neptune-ps/neptune), this project is instead RuneScript-focused. There are some "clientscript" references dangling around, but all of the triggers and types we have are for the server side.
+A fork of [Neptune](https://github.com/neptune-ps/neptune) (a project undertaking modern OSRS), this project is instead entirely RuneScript-focused.
 
 There is a work-in-progress effort to port this to run in TypeScript, and this repo will be sunsetted in favor of a JRE-less setup eventually.
 

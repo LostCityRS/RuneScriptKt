@@ -38,14 +38,14 @@ fun main(args: Array<String>) {
         exitProcess(1)
     }
 
-    // load commands and clientscript id mappings
+    // load commands and script id mappings
     val commandPointers = hashMapOf<String, PointerHolder>()
     loadSpecialSymbols(symbolPaths, mapper, commandPointers, checkPointers)
 
     // setup compiler and execute it
     val compiler = ServerScriptCompiler(sourcePaths, excludePaths, writer, commandPointers, symbolPaths, mapper)
     compiler.setup()
-    compiler.run()
+    compiler.run("rs2")
 }
 
 private fun loadConfig(configPath: Path): ServerScriptCompilerConfig {

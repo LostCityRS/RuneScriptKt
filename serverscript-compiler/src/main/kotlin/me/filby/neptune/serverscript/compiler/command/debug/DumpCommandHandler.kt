@@ -78,7 +78,7 @@ class DumpCommandHandler : DynamicCommandHandler {
             error("Unsupported type conversion to string: $type")
         }
 
-        val conversionSymbol = rootTable.find(SymbolType.ClientScript(CommandTrigger), conversionCommandName)
+        val conversionSymbol = rootTable.find(SymbolType.ServerScript(CommandTrigger), conversionCommandName)
         if (conversionSymbol != null) {
             instruction(Opcode.Command, conversionSymbol)
         }
