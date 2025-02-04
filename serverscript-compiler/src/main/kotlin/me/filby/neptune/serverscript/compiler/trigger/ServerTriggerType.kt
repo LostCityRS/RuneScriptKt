@@ -743,7 +743,7 @@ enum class ServerTriggerType(
     IF_CLOSE(
         148,
         subjectMode = SubjectMode.Type(ScriptVarType.INTERFACE),
-        pointers = EnumSet.of(PointerType.ACTIVE_PLAYER, PointerType.P_ACTIVE_PLAYER)
+        pointers = EnumSet.of(PointerType.ACTIVE_PLAYER)
     ),
     INV_BUTTON1(
         149,
