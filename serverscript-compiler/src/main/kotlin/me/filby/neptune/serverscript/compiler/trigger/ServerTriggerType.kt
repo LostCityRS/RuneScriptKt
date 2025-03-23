@@ -869,6 +869,11 @@ enum class ServerTriggerType(
         subjectMode = SubjectMode.Type(ScriptVarType.NPC),
         pointers = EnumSet.of(PointerType.ACTIVE_NPC)
     ),
+    AI_DESPAWN(
+        167,
+        subjectMode = SubjectMode.Type(ScriptVarType.NPC),
+        pointers = EnumSet.of(PointerType.ACTIVE_NPC)
+    ),
     ;
 
     override val identifier: String get() = name.lowercase()
