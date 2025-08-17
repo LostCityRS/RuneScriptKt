@@ -4,6 +4,7 @@ import me.filby.neptune.runescript.compiler.ScriptCompiler
 import me.filby.neptune.runescript.compiler.pointer.PointerHolder
 import me.filby.neptune.runescript.compiler.type.MetaType
 import me.filby.neptune.runescript.compiler.type.Type
+import me.filby.neptune.runescript.compiler.type.wrapped.VarBitType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarNpcType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarPlayerType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarSharedType
@@ -92,6 +93,8 @@ class ServerScriptCompiler(
 
         types.register("varp", VarPlayerType(MetaType.Any))
         addProtectedSymLoader("varp", ::VarPlayerType)
+        types.register("varbit", VarBitType(MetaType.Any))
+        addProtectedSymLoader("varbit", ::VarBitType)
         addSymLoader("varn", ::VarNpcType)
         addSymLoader("vars", ::VarSharedType)
 

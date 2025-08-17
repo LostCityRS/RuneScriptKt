@@ -12,6 +12,7 @@ import me.filby.neptune.runescript.compiler.pointer.PointerType
 import me.filby.neptune.runescript.compiler.symbol.BasicSymbol
 import me.filby.neptune.runescript.compiler.symbol.ScriptSymbol
 import me.filby.neptune.runescript.compiler.trigger.TriggerType
+import me.filby.neptune.runescript.compiler.type.wrapped.VarBitType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarNpcType
 import me.filby.neptune.runescript.compiler.type.wrapped.VarPlayerType
 import java.util.EnumSet
@@ -294,6 +295,7 @@ internal class PointerChecker(
                 val symbol = instruction.operand as BasicSymbol
                 when (symbol.type) {
                     is VarPlayerType -> pointer == PointerType.ACTIVE_PLAYER
+                    is VarBitType -> pointer == PointerType.ACTIVE_PLAYER
                     is VarNpcType -> pointer == PointerType.ACTIVE_NPC
                     else -> false
                 }
@@ -305,6 +307,10 @@ internal class PointerChecker(
                         symbol.protected && pointer == PointerType.P_ACTIVE_PLAYER ||
                             !symbol.protected && pointer == PointerType.ACTIVE_PLAYER
                     }
+                    is VarBitType -> {
+                        symbol.protected && pointer == PointerType.P_ACTIVE_PLAYER ||
+                            !symbol.protected && pointer == PointerType.ACTIVE_PLAYER
+                    }
                     is VarNpcType -> pointer == PointerType.ACTIVE_NPC
                     else -> false
                 }
@@ -313,6 +319,7 @@ internal class PointerChecker(
                 val symbol = instruction.operand as BasicSymbol
                 when (symbol.type) {
                     is VarPlayerType -> pointer == PointerType.ACTIVE_PLAYER2
+                    is VarBitType -> pointer == PointerType.ACTIVE_PLAYER2
                     is VarNpcType -> pointer == PointerType.ACTIVE_NPC2
                     else -> false
                 }
@@ -321,6 +328,10 @@ internal class PointerChecker(
                 val symbol = instruction.operand as BasicSymbol
                 when (symbol.type) {
                     is VarPlayerType -> {
+                        symbol.protected && pointer == PointerType.P_ACTIVE_PLAYER2 ||
+                            !symbol.protected && pointer == PointerType.ACTIVE_PLAYER2
+                    }
+                    is VarBitType -> {
                         symbol.protected && pointer == PointerType.P_ACTIVE_PLAYER2 ||
                             !symbol.protected && pointer == PointerType.ACTIVE_PLAYER2
                     }

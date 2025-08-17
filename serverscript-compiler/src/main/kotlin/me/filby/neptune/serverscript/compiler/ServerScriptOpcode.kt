@@ -24,6 +24,8 @@ enum class ServerScriptOpcode(val id: Int, val largeOperand: Boolean = false) {
     GOSUB(22),
     JUMP(23),
     SWITCH(24, true),
+    PUSH_VARBIT(25, true),
+    POP_VARBIT(27, true),
     BRANCH_LESS_THAN_OR_EQUALS(31, true),
     BRANCH_GREATER_THAN_OR_EQUALS(32, true),
     PUSH_INT_LOCAL(33, true),
