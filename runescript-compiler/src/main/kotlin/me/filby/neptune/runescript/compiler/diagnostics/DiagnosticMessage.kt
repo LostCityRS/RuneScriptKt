@@ -32,6 +32,7 @@ internal object DiagnosticMessage {
     const val SCRIPT_REDECLARATION = "[%s,%s] is already defined."
     const val SCRIPT_LOCAL_REDECLARATION = "'$%s' is already defined."
     const val SCRIPT_TRIGGER_INVALID = "'%s' is not a valid trigger type."
+    const val SCRIPT_COMMAND_ONLY = "Using a '*' is only allowed for commands."
     const val SCRIPT_TRIGGER_NO_PARAMETERS = "The trigger type '%s' is not allowed to have parameters defined."
     const val SCRIPT_TRIGGER_EXPECTED_PARAMETERS = "The trigger type '%s' is expected to accept (%s)."
     const val SCRIPT_TRIGGER_NO_RETURNS = "The trigger type '%s' is not allowed to return values."

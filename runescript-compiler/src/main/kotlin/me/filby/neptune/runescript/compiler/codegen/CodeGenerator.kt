@@ -556,7 +556,7 @@ public class CodeGenerator(
         }
 
         // attempt to call the dynamic command handlers code generation (if one exists)
-        if (emitDynamicCommand(commandCallExpression.name.text, commandCallExpression)) {
+        if (emitDynamicCommand(commandCallExpression.nameString, commandCallExpression)) {
             return
         }
 

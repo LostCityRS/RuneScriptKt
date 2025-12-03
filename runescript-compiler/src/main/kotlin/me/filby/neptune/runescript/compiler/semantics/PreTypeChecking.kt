@@ -22,6 +22,7 @@ import me.filby.neptune.runescript.compiler.symbol.LocalVariableSymbol
 import me.filby.neptune.runescript.compiler.symbol.ScriptSymbol
 import me.filby.neptune.runescript.compiler.symbol.SymbolTable
 import me.filby.neptune.runescript.compiler.symbol.SymbolType
+import me.filby.neptune.runescript.compiler.trigger.CommandTrigger
 import me.filby.neptune.runescript.compiler.trigger.SubjectMode
 import me.filby.neptune.runescript.compiler.trigger.TriggerManager
 import me.filby.neptune.runescript.compiler.trigger.TriggerType
@@ -93,6 +94,13 @@ internal class PreTypeChecking(
             script.triggerType = trigger
         }
 
+        if (script.isStar && trigger != CommandTrigger) {
+            // only commands should allow the * symbol after a name
+            // the only reason the * symbol is allowed is to allow defining cases like
+            // "npc_queue" and "npc_queue*" as two different commands since they have different semantics.
+            script.name.reportError(DiagnosticMessage.SCRIPT_COMMAND_ONLY)
+        }
+
         // verify subject matched what the trigger requires
         checkScriptSubject(trigger, script)
 
@@ -136,12 +144,12 @@ internal class PreTypeChecking(
         if (trigger != null) {
             // attempt to insert the script into the root table and error if failed to insert
             val scriptSymbol = ScriptSymbol.ServerScriptSymbol(
-                trigger, script.name.text,
+                trigger, script.nameString,
                 script.parameterType, script.returnType
             )
             val inserted = rootTable.insert(SymbolType.ServerScript(trigger), scriptSymbol)
             if (!inserted) {
-                script.reportError(DiagnosticMessage.SCRIPT_REDECLARATION, trigger.identifier, script.name.text)
+                script.reportError(DiagnosticMessage.SCRIPT_REDECLARATION, trigger.identifier, script.nameString)
             } else {
                 // only set the symbol if it was actually inserted
                 script.symbol = scriptSymbol

@@ -105,6 +105,7 @@ public class AstBuilder(
             source = ctx.location,
             trigger = ctx.trigger.visit(),
             name = ctx.name.visit(),
+            isStar = ctx.MUL() != null,
             parameters = ctx.parameterList()?.parameter()?.map { it.visit() },
             returnTokens = returns,
             statements = ctx.statement().map { it.visit() }
@@ -235,10 +236,17 @@ public class AstBuilder(
     }
 
     override fun visitCommandCallExpression(ctx: CommandCallExpressionContext): Node {
+        val args2 = if (ctx.MUL() != null) {
+            // if using a * command we always want the arguments2 to be non-null
+            ctx.expressionList(1)?.visit() ?: emptyList()
+        } else {
+            null
+        }
         return CommandCallExpression(
             source = ctx.location,
             name = ctx.identifier().visit(),
-            arguments = ctx.expressionList().visit()
+            arguments = ctx.expressionList(0).visit(),
+            arguments2 = args2,
         )
     }
 

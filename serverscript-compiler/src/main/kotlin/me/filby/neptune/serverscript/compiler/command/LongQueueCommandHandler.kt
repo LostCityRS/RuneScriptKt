@@ -1,7 +1,5 @@
 package me.filby.neptune.serverscript.compiler.command
 
-import me.filby.neptune.runescript.compiler.codegen.Opcode
-import me.filby.neptune.runescript.compiler.configuration.command.CodeGeneratorContext
 import me.filby.neptune.runescript.compiler.configuration.command.DynamicCommandHandler
 import me.filby.neptune.runescript.compiler.configuration.command.TypeCheckingContext
 import me.filby.neptune.runescript.compiler.type
@@ -14,42 +12,15 @@ class LongQueueCommandHandler(queueType: Type) : DynamicCommandHandler {
     private val queueType = queueType as MetaType.Script
 
     override fun TypeCheckingContext.typeCheck() {
-        val queue = checkArgument(0, queueType)
-        checkArgument(1, PrimitiveType.INT) // delay
-        checkArgument(2, PrimitiveType.INT) // logout action
+        checkArgument(0, queueType) // script to queue
+        checkArgument(1, PrimitiveType.INT) // delay before running script
+        checkArgument(2, PrimitiveType.INT) // int arg to pass to script
+        checkArgument(3, PrimitiveType.INT) // action to perform if logout succeeds mid-queue
 
-        val queueExpressionType = queue?.type
-        val expectedTypesList = mutableListOf(queueType, PrimitiveType.INT, PrimitiveType.INT)
-        if (
-            queueExpressionType is MetaType.Script &&
-            queueExpressionType.trigger == queueType.trigger &&
-            queueExpressionType.parameterType != MetaType.Unit
-        ) {
-            expectedTypesList += TupleType.toList(queueExpressionType.parameterType)
-        }
+        // todo: (type safety) make sure queue script only expects up to 1 int arg (parameterType)
 
+        val expectedTypesList = mutableListOf(queueType, PrimitiveType.INT, PrimitiveType.INT, PrimitiveType.INT)
         checkArgumentTypes(TupleType.fromList(expectedTypesList))
         expression.type = MetaType.Unit
-    }
-
-    override fun CodeGeneratorContext.generateCode() {
-        val arguments = expression.arguments
-
-        // visit all arguments
-        arguments.visit()
-
-        // if there are more than 3 arguments that means the queue expects additional parameters,
-        // so we must build a string of the argument types to push
-        if (arguments.size > 3) {
-            val shortTypes = arguments
-                .subList(3, arguments.size)
-                .mapNotNull { it.type.code }
-                .joinToString("")
-            instruction(Opcode.PushConstantString, shortTypes)
-        } else {
-            instruction(Opcode.PushConstantString, "")
-        }
-
-        command()
     }
 }

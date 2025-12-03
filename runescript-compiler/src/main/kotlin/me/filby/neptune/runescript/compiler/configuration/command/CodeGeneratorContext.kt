@@ -38,6 +38,22 @@ public data class CodeGeneratorContext(
         }
 
     /**
+     * Returns a list of expressions that were passed to the expression as arguments.
+     *
+     * This returns [CommandCallExpression.arguments2] if the expression is a [CommandCallExpression],
+     * otherwise an empty list.
+     */
+    public val Expression?.arguments2: List<Expression>
+        get() {
+            if (this is CommandCallExpression) {
+                if (isStar) {
+                    return arguments2!!
+                }
+            }
+            return emptyList()
+        }
+
+    /**
      * Emits a new instruction with the given [opcode] and [operand].
      */
     public fun <T : Any> instruction(

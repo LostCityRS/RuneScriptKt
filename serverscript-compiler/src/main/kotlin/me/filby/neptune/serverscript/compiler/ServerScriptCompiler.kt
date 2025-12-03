@@ -13,8 +13,10 @@ import me.filby.neptune.serverscript.compiler.command.DbFindCommandHandler
 import me.filby.neptune.serverscript.compiler.command.DbGetFieldCommandHandler
 import me.filby.neptune.serverscript.compiler.command.EnumCommandHandler
 import me.filby.neptune.serverscript.compiler.command.LongQueueCommandHandler
+import me.filby.neptune.serverscript.compiler.command.LongQueueVarArgCommandHandler
 import me.filby.neptune.serverscript.compiler.command.ParamCommandHandler
 import me.filby.neptune.serverscript.compiler.command.QueueCommandHandler
+import me.filby.neptune.serverscript.compiler.command.QueueVarArgCommandHandler
 import me.filby.neptune.serverscript.compiler.command.TimerCommandHandler
 import me.filby.neptune.serverscript.compiler.command.debug.DumpCommandHandler
 import me.filby.neptune.serverscript.compiler.command.debug.ScriptCommandHandler
@@ -58,8 +60,12 @@ class ServerScriptCompiler(
         types.register("queue", MetaType.Script(ServerTriggerType.QUEUE, MetaType.Any, MetaType.Nothing))
         addDynamicCommandHandler("queue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler(".queue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler("queue*", QueueVarArgCommandHandler(types.find("queue")))
+        addDynamicCommandHandler(".queue*", QueueVarArgCommandHandler(types.find("queue")))
         addDynamicCommandHandler("longqueue", LongQueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler(".longqueue", LongQueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler("longqueue*", LongQueueVarArgCommandHandler(types.find("queue")))
+        addDynamicCommandHandler(".longqueue*", LongQueueVarArgCommandHandler(types.find("queue")))
 
         types.register("timer", MetaType.Script(ServerTriggerType.TIMER, MetaType.Any, MetaType.Nothing))
         addDynamicCommandHandler("settimer", TimerCommandHandler(types.find("timer")))
@@ -93,8 +99,6 @@ class ServerScriptCompiler(
 
         types.register("varp", VarPlayerType(MetaType.Any))
         addProtectedSymLoader("varp", ::VarPlayerType)
-        types.register("varbit", VarBitType(MetaType.Any))
-        addProtectedSymLoader("varbit", ::VarBitType)
         addSymLoader("varn", ::VarNpcType)
         addSymLoader("vars", ::VarSharedType)
 
@@ -107,19 +111,24 @@ class ServerScriptCompiler(
         addSymLoader("model", ScriptVarType.MODEL)
         addSymLoader("synth", ScriptVarType.SYNTH)
 
-        // mid-late 2004
+        // sept 2004
+        types.register("varbit", VarBitType(MetaType.Any))
+        addProtectedSymLoader("varbit", ::VarBitType)
         addDynamicCommandHandler("weakqueue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler(".weakqueue", QueueCommandHandler(types.find("queue")))
-        // todo: varbit type
+        addDynamicCommandHandler("weakqueue*", QueueVarArgCommandHandler(types.find("queue")))
+        addDynamicCommandHandler(".weakqueue*", QueueVarArgCommandHandler(types.find("queue")))
 
-        // late 2004
+        // late 2004/early 2005
         addDynamicCommandHandler("strongqueue", QueueCommandHandler(types.find("queue")))
         addDynamicCommandHandler(".strongqueue", QueueCommandHandler(types.find("queue")))
+        addDynamicCommandHandler("strongqueue*", QueueVarArgCommandHandler(types.find("queue")))
+        addDynamicCommandHandler(".strongqueue*", QueueVarArgCommandHandler(types.find("queue")))
 
         // 2005
         addDynamicCommandHandler("enum", EnumCommandHandler())
         addSymLoader("enum", ScriptVarType.ENUM)
-        // todo: mes type
+        // todo: mes type alias
 
         // 2006
         // todo: runclientscript command handler
